@@ -17,6 +17,7 @@ use App\Models\TeacherSubject;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Protection;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ExportExcel extends Controller
@@ -261,6 +262,7 @@ class ExportExcel extends Controller
         $subject = $teacherSubject->subject;
         $competencies = $teacherSubject->competencies;
         $curriculum = $teacherSubject->grade->teacherGrade->curriculum;
+        $countStudent = $teacherSubject->grade->studentGrade->count();
 
         // Inisialisasi spreadsheet
         $spreadsheet = new Spreadsheet();
@@ -316,18 +318,61 @@ class ExportExcel extends Controller
             $sheet->getColumnDimension('D')->setVisible(false);
             $sheet->getColumnDimension('E')->setVisible(false);
             
+            // count student
+            $rowStudent = 13 + $countStudent;
+
             // cek kurikulum
             if($curriculum == 'merdeka'){
                 $sheet->getColumnDimension('G')->setVisible(false);
             }
+
+            // bisa di edit
+            $sheet->getStyle('F14:F'.$rowStudent)->getProtection()->setLocked(\PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED);
+            // bisa di edit
+            $sheet->getStyle('G14:G'.$rowStudent)->getProtection()->setLocked(\PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED);
+            // proteksi semua cell
+
+            $sheet->getProtection()->setPassword('PhpSpreadsheet');
+            $spreadsheet->getActiveSheet()->getProtection()->setSheet(true);
+
+            // validasi tiap-tiap cell
+            for ($i=14; $i <= $rowStudent; $i++) { 
+                # code...
+                $validation = $sheet->getCell('F'.$i)
+                    ->getDataValidation();
+                $validation->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_WHOLE );
+                $validation->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_STOP );
+                $validation->setAllowBlank(false);
+                $validation->setShowInputMessage(true);
+                $validation->setShowErrorMessage(true);
+                $validation->setErrorTitle('Input error');
+                $validation->setError('Number is not allowed!');
+                $validation->setPromptTitle('Allowed input');
+                $validation->setPrompt('Only numbers between 0 and 100 are allowed.');
+                $validation->setFormula1(0);
+                $validation->setFormula2(100);
+
+                $validation = $sheet->getCell('G'.$i)
+                    ->getDataValidation();
+                $validation->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_WHOLE );
+                $validation->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_STOP );
+                $validation->setAllowBlank(false);
+                $validation->setShowInputMessage(true);
+                $validation->setShowErrorMessage(true);
+                $validation->setErrorTitle('Input error');
+                $validation->setError('Number is not allowed!');
+                $validation->setPromptTitle('Allowed input');
+                $validation->setPrompt('Only numbers between 0 and 100 are allowed.');
+                $validation->setFormula1(0);
+                $validation->setFormula2(100);
+            }
         }
-
-
+        
         // hapus sheet worksheet
-        $sheetIndex = $spreadsheet->getIndex(
-            $spreadsheet->getSheetByName('Worksheet')
-        );
-        $spreadsheet->removeSheetByIndex($sheetIndex);
+        // $sheetIndex = $spreadsheet->getIndex(
+        //     $spreadsheet->getSheetByName('Worksheet')
+        // );
+        // $spreadsheet->removeSheetByIndex($sheetIndex);
 
         // Membuat file Excel
         $writer = new Xlsx($spreadsheet);
@@ -609,16 +654,30 @@ class ExportExcel extends Controller
             $row++;
         }
 
+        // setting width
+        $sheet->getColumnDimension('C')->setWidth(50); 
+        $sheet->getColumnDimension('E')->setWidth(50); 
+
         // hide column A
         $sheet->getColumnDimension('A')->setVisible(false);
         $sheet->getColumnDimension('G')->setVisible(false);
+
         // hide kode dan deskripsi keterampilan
         if($teacher_subject->grade->teacherGrade->curriculum == 'merdeka'){
             $sheet->getColumnDimension('D')->setVisible(false);
             $sheet->getColumnDimension('E')->setVisible(false);
+            
         }
         
-
+        // bisa di edit
+        $sheet->getStyle('B:C')->getProtection()->setLocked(\PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED);
+        $sheet->getStyle('D:E')->getProtection()->setLocked(\PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED);
+        $sheet->getStyle('F')->getProtection()->setLocked(\PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_UNPROTECTED);
+            
+        // proteksi semua cell
+        $sheet->getProtection()->setPassword('PhpSpreadsheet');
+        $spreadsheet->getActiveSheet()->getProtection()->setSheet(true);
+        
         $writer = new Xlsx($spreadsheet);
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx'); // <<< HERE
         $filename = "Kompetensi ". $teacher_subject->subject->code . ' '. $teacher_subject->grade->name.".xlsx"; // <<< HERE
