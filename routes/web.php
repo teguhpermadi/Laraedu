@@ -111,6 +111,7 @@ Route::controller(Report::class)->group(function(){
 Route::controller(Leger::class)->group(function(){
     Route::get('leger/subject/{id}', 'subject')->name('leger.subject');
     Route::get('leger/attendance', 'attendance')->name('leger.attendance');
+    Route::get('leger/grade/{id}', 'grade')->name('leger.grade');
 });
 
 // Route::controller(ReportProject::class)->group(function(){
@@ -156,7 +157,7 @@ Route::controller(ExportExcel::class)->group(function(){
     Route::get('export/student-extracurricular', 'studentExtracurricular')->name('export.studentExtracurricular');
     Route::get('export/teacher-subject', 'teacherSubject')->name('export.teacherSubject');
     Route::get('export/teacher-grade', 'teacherGrade')->name('export.teacherGrade');
-    Route::get('export/student-competency/{teacher_subject_id}', 'studentCompetency')->name('export.studentCompetency');
+    // Route::get('export/student-competency/{teacher_subject_id}', 'studentCompetency')->name('export.studentCompetency');
     Route::get('export/student-competency-sheet/{teacher_subject_id}', 'studentCompetencySheet')->name('export.studentCompetencySheet');
     Route::get('export/exam/{teacher_subject_id}', 'exam')->name('export.exam');
     Route::get('export/attendance/{grade_id}', 'attendance')->name('export.attendance');

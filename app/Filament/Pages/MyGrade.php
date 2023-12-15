@@ -65,6 +65,14 @@ class MyGrade extends Page implements HasTable
             ])
             ->bulkActions([
                 // ...
+            ])
+            ->headerActions([
+                Action::make('Leger Kelas')
+                    ->button()
+                    ->url(function(){
+                        $myGrade = TeacherGrade::myGrade()->first();
+                        return route('leger.grade', $myGrade->grade_id);
+                    }),
             ]);
     }
 

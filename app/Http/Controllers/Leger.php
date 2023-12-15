@@ -26,4 +26,19 @@ class Leger extends Controller
         // return $students;
         return view('leger.attendance', ['students' => $students, 'grade' => $grade]);
     }
+
+    public function grade($id)
+    {
+        $grade = TeacherGrade::with('academic','grade.studentGrade.student', 'teacher')->find($id);
+        $subjects = TeacherSubject::with('subject')->where('grade_id', $grade->grade_id)->get();
+
+        // $data = [
+        //     'grade' => $grade->grade,
+        //     'teacher' => $grade->teacher,
+        //     'subjects' => $subjects,
+        // ];
+
+        // return $data;
+        return view('leger.grade', ['subjects' => $subjects, 'grade' => $grade]);
+    }
 }
