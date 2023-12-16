@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\ProjectCoordinatorResource\Pages;
 
 use App\Filament\Resources\ProjectCoordinatorResource;
+use App\Models\Teacher;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Database\Eloquent\Model;
 
 class ManageProjectCoordinators extends ManageRecords
 {
@@ -13,7 +15,12 @@ class ManageProjectCoordinators extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+            ->using(function (array $data, string $model): Model {
+                $user = Teacher::find($data['teacher_id'])->userable->user;
+                $user->assignRole('project');
+                return $model::create($data);
+            }),
         ];
     }
 }

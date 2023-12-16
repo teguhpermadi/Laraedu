@@ -3,10 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProjectResource\Pages;
+use App\Filament\Resources\ProjectResource\Pages\Assesment;
 use App\Filament\Resources\ProjectResource\Pages\ProjectAssesment;
 use App\Filament\Resources\ProjectResource\RelationManagers;
 use App\Filament\Resources\ProjectResource\RelationManagers\ProjectTargetRelationManager;
 use App\Models\AcademicYear;
+use App\Models\Grade;
 use App\Models\Project;
 use App\Models\ProjectCoordinator;
 use Filament\Forms;
@@ -15,6 +17,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
@@ -40,24 +43,28 @@ class ProjectResource extends Resource
                         $data = ProjectCoordinator::with('grade')->where('teacher_id', auth()->user()->userable->userable_id)->get()->map(function ($grade) {
                             return [
                                 'id' => $grade->grade->id,
-                                  'name' => $grade->grade->name,
+                                'name' => $grade->grade->name,
                             ];
                         })->pluck('name', 'id');
                         
                         return $data;                        
                     })
-                    ->required(),
+                    ->required()
+                    ->reactive(),
                 Select::make('phase')
-                    ->options([
-                        'a' => 'Fase A',
-                        'b' => 'Fase B',
-                        'c' => 'Fase C',
-                        'd' => 'Fase D',
-                        'e' => 'Fase E',
-                        'paud' => 'Fase PAUD',
-                    ])
+                    ->options(function(Get $get){
+                        if( $get('grade_id')){
+                            $gradeId = $get('grade_id');
+                            $fase = Grade::find($gradeId)->fase;
+                            return [
+                                $fase => 'Fase '.$fase
+                            ];
+                        }
+
+                        return [];
+                    })
                     ->required(),
-                TextInput::make('name')
+                TextInput::make('name')->label('Project Title')
                     ->required(),
                 Textarea::make('description')
                     ->columnSpanFull()
@@ -78,9 +85,16 @@ class ProjectResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Action::make('Assesment')
-                ->url(function(Project $record){
-                    return route('filament.admin.resources.projects.assesment', ['record'=>$record]);
-                }),
+                    ->button()
+                    ->url(function(Project $record){
+                        return route('filament.admin.resources.projects.assesment', ['record'=>$record]);
+                    }),
+                Action::make('Leger')
+                    ->button()
+                    ->openUrlInNewTab()
+                    ->url(function(Project $record){
+                        return route('leger.project', ['id'=>$record]);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -102,7 +116,7 @@ class ProjectResource extends Resource
             'index' => Pages\ListProjects::route('/'),
             'create' => Pages\CreateProject::route('/create'),
             'edit' => Pages\EditProject::route('/{record}/edit'),
-            'assesment' => ProjectAssesment::route('/{record}/assesment'),
+            'assesment' => Assesment::route('/{record}/assesment'),
         ];
     }    
 }

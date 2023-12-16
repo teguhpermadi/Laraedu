@@ -24,6 +24,11 @@ class Project extends Model
         static::addGlobalScope(new AcademicYearScope);
     }
 
+    public function academic()
+    {
+        return $this->belongsTo(AcademicYear::class, 'academic_year_id');
+    }
+
     public function teacher()
     {
          return $this->belongsTo(Teacher::class);

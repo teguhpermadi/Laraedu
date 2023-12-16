@@ -21,6 +21,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProjectCoordinatorResource extends Resource
 {
+    protected static ?int $navigationSort = 6;
+    
+    protected static ?string $navigationGroup = 'Settings';
+
     protected static ?string $model = ProjectCoordinator::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -51,12 +55,16 @@ class ProjectCoordinatorResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                ->before(function (ProjectCoordinator $record) {
+                    $user = Teacher::find($record->teacher_id)->userable->user;
+                    $user->removeRole('project');
+                }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
             ]);
     }
     

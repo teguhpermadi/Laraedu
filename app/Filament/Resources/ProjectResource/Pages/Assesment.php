@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Form;
 
-class ProjectAssesment extends Page implements HasForms, HasTable
+class Assesment extends Page implements HasForms, HasTable
 {
     use InteractsWithForms;
     use InteractsWithTable;

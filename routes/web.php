@@ -112,6 +112,7 @@ Route::controller(Leger::class)->group(function(){
     Route::get('leger/subject/{id}', 'subject')->name('leger.subject');
     Route::get('leger/attendance', 'attendance')->name('leger.attendance');
     Route::get('leger/grade/{id}', 'grade')->name('leger.grade');
+    Route::get('leger/project/{id}', 'project')->name('leger.project');
 });
 
 // Route::controller(ReportProject::class)->group(function(){

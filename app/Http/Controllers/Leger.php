@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\Grade;
+use App\Models\Project;
 use App\Models\Student;
 use App\Models\TeacherGrade;
 use App\Models\TeacherSubject;
@@ -40,5 +41,12 @@ class Leger extends Controller
 
         // return $data;
         return view('leger.grade', ['subjects' => $subjects, 'grade' => $grade]);
+    }
+
+    public function project($id)
+    {
+        $data = Project::with('projectTarget.target', 'grade.studentGrade.student', 'teacher', 'academic')->find($id);
+        // return $data;
+        return view('leger.project', ['data' => $data]);
     }
 }
