@@ -12,13 +12,22 @@ class ScoreProject extends Component
     public function mount($student_id, $project_target_id)
     {
         $data = ProjectStudent::where('student_id', $student_id)->where('project_target_id', $project_target_id)->first();
-        switch ($data) {
-            case 'value':
-                # code...
+        // $this->score = $data->score;
+        switch ($data->score) {
+            case '4':
+                $this->score = 'BSB';
+                break;
+            case '3':
+                $this->score = 'BSH';
+                break;
+            case '2':
+                $this->score = 'MB';
+                $this->color = 'yellow';
                 break;
             
             default:
-                # code...
+                $this->score = 'BB';
+                $this->color = 'orange';
                 break;
         }
     }

@@ -26,6 +26,17 @@ class MyGrade extends Page implements HasTable
 
     protected static string $view = 'filament.pages.my-grade';
 
+    public $visible = false;
+
+    public function mount()
+    {
+        $data = TeacherGrade::where('teacher_id', auth()->user()->userable->user_id)->first();
+        
+        if($data->curriculum == 'merdeka'){
+            $this->visible = true;
+        }
+    }
+
     // public static function shouldRegisterNavigation(): bool
     // {
     //     if(auth()->user()->hasRole('teacher grade')){
@@ -58,10 +69,11 @@ class MyGrade extends Page implements HasTable
                     ->button()
                     ->url(fn (Student $record): string => route('report', $record)),
                     // ->openUrlInNewTab(),
-                // Action::make('Report Project')
-                //     ->button()
-                //     ->url(fn (Student $record): string => route('report.project', $record))
-                //     ->openUrlInNewTab(),
+                Action::make('Report Project')
+                    ->button()
+                    ->url(fn (Student $record): string => route('report.project', $record))
+                    ->openUrlInNewTab()
+                    ->visible($this->visible),
             ])
             ->bulkActions([
                 // ...

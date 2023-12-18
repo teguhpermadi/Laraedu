@@ -5,6 +5,9 @@ use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Attitude;
 use App\Models\Exam;
+use App\Models\Project;
+use App\Models\ProjectNote;
+use App\Models\ProjectStudent;
 use App\Models\School;
 use App\Models\Student;
 use App\Models\StudentExtracurricular;
@@ -402,8 +405,110 @@ class Report extends Controller
         // tabel ekstrakurikuler
         $templateProcessor->cloneRowAndSetValues('orderEx', $data['extracurriculars']);
         
-        $filename = '\Rapor '.$data['student']['name'].' - '. $data['academic']['semester'] .'.docx';
-        $file_path = storage_path('\app\public\downloads'.$filename);
+        $filename = 'Rapor '.$data['student']['name'].' - '. $data['academic']['semester'] .'.docx';
+        $file_path = storage_path('/app/public/downloads/'.$filename);
+        $templateProcessor->saveAs($file_path);
+        return response()->download($file_path)->deleteFileAfterSend(true);; // <<< HERE
+    }
+
+    public function project($id)
+    {
+        $academic = AcademicYear::with('teacher')->active()->first();
+        $school = School::first();
+
+        $student = Student::find($id);
+        
+        $grade = StudentGrade::with('grade')->where('student_id', $id)->first();
+        $teacherGrade = TeacherGrade::with('teacher')->where('grade_id', $grade->grade_id)->first();
+
+        $project = Project::with(['projectTarget.projectStudent' => function($q) use ($id){
+            $q->where('student_id', $id);
+        }])->where('grade_id', $student->studentGrade->grade_id)->get();
+
+        $data = [];
+
+        $data = [
+            'school' => $school,
+            'academic' => $academic->toArray(),
+            'headmaster' => $academic->teacher->name,
+            'date_report' => Carbon::parse($academic->date_report)->isoFormat('D MMMM Y'),
+            'teacher' => $teacherGrade->teacher,
+            'student' => $student->toArray(),
+            'grade' => $grade->grade->toArray(),
+            'project' => $project,
+        ];
+
+        $data = $this->reportProject($data);
+        return $data;
+    }
+
+    public function reportProject($data)
+    {
+        $templateProcessor = new TemplateProcessor( storage_path('/app/public/templates/project.docx'));
+        $templateProcessor->setValue('school_name',$data['school']['name']);
+        $templateProcessor->setValue('school_address',$data['school']['address']);
+        $templateProcessor->setValue('headmaster',$data['headmaster']);
+        $templateProcessor->setValue('date_report',$data['date_report']);
+        $templateProcessor->setValue('year',$data['academic']['year']);
+        $templateProcessor->setValue('semester',$data['academic']['semester']);
+        $templateProcessor->setValue('student_name',$data['student']['name']);
+        $templateProcessor->setValue('nisn',$data['student']['nisn']);
+        $templateProcessor->setValue('nis',$data['student']['nis']);
+        $templateProcessor->setValue('grade_name',$data['grade']['name']);
+        $templateProcessor->setValue('grade_level',$data['grade']['grade']);
+        $templateProcessor->setValue('teacher_name',$data['teacher']['name']);
+
+        /* 
+        clone project
+        */
+        $replacements = [];
+        $projectNum = 1;
+        
+        foreach ($data['project'] as $project) {
+            $note = ProjectNote::where('project_id', $project->id)->where('student_id', $data['student']['id'])->first();
+
+            $replacements[] = [
+                'project_num' => $projectNum,
+                'title' => $project->name,
+                'description' => $project->description,
+                'num' => '${num_'.$project->id.'}',
+                'project_note' => $note->note,
+            ];
+
+            $projectNum++;
+        }
+
+        $templateProcessor->cloneBlock('block_project', 0, true, false, $replacements);
+
+        /*
+        clone row berdasarkan project
+        */
+        foreach ($data['project'] as $project) {
+            $targets = [];
+            $numRow = 1;
+            foreach ($project['projectTarget'] as $item) {
+                $score = $item->projectStudent->first()->score;
+                $targets[] = [
+                    'num_'.$project->id => $numRow,
+                    'dimention_desc' => $item->target->dimention->description,
+                    'element_desc' => $item->target->element->description,
+                    'sub_element_desc' => $item->target->subElement->description,
+                    'value_desc' => $item->value->description,
+                    'sub_value_desc' => $item->subValue->description,
+                    'target_desc' => $item->target->description,
+                    'bsb' => ($score == 4) ? '✔' : '',
+                    'bsh' => ($score == 3) ? '✔' : '',
+                    'mb' => ($score == 2) ? '✔' : '',
+                    'bb' => ($score == 1) ? '✔' : '',
+                ];
+                $numRow++;
+            }
+            // dd($targets);
+            $templateProcessor->cloneRowAndSetValues('num_'.$project->id, $targets);
+        }
+
+        $filename = 'Projek '.$data['student']['name'].' - '. $data['academic']['semester'] .'.docx';
+        $file_path = storage_path('/app/public/downloads/'.$filename);
         $templateProcessor->saveAs($file_path);
         return response()->download($file_path)->deleteFileAfterSend(true);; // <<< HERE
     }

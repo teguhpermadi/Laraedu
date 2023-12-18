@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\Pages\Assesment;
+use App\Filament\Resources\ProjectResource\Pages\Note;
 use App\Filament\Resources\ProjectResource\Pages\ProjectAssesment;
 use App\Filament\Resources\ProjectResource\RelationManagers;
 use App\Filament\Resources\ProjectResource\RelationManagers\ProjectTargetRelationManager;
@@ -89,6 +90,11 @@ class ProjectResource extends Resource
                     ->url(function(Project $record){
                         return route('filament.admin.resources.projects.assesment', ['record'=>$record]);
                     }),
+                Action::make('Note')
+                    ->button()
+                    ->url(function(Project $record){
+                        return route('filament.admin.resources.projects.note', ['record'=>$record]);
+                    }),
                 Action::make('Leger')
                     ->button()
                     ->openUrlInNewTab()
@@ -117,6 +123,7 @@ class ProjectResource extends Resource
             'create' => Pages\CreateProject::route('/create'),
             'edit' => Pages\EditProject::route('/{record}/edit'),
             'assesment' => Assesment::route('/{record}/assesment'),
+            'note' => Note::route('/{record}/note'),
         ];
     }    
 }

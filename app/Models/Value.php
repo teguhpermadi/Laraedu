@@ -19,6 +19,5 @@ class Value extends Model
     {
         return $this->hasMany(SubValue::class, 'code_element', 'code_element');
     }
-
     
 }

@@ -26,15 +26,25 @@
     }
     </style>
 <body>
-    <h1>Leger Proyek</h1>
+    <h1>Leger Proyek {{$data->name}}</h1>
     <p>
         Tahun Pelajaran : {{$data->academic->year}} <br>
         Semester : {{$data->academic->semester}} <br>
         Kelas : {{$data->grade->name}} <br>
         Fase : {{$data->grade->fase}} <br>
-        Koordinator Proyek : {{$data->teacher->name}} <br>
-        <b>Nama Proyek : {{$data->name}}</b><br>
-        Deskripsi : {{$data->description}} <br>
+        Koordinator Proyek : {{$data->teacher->name}} <br>        
+    </p>
+
+    <p>
+        <b>Deskripsi Proyek: </b> {{$data->description}}
+    </p>
+
+    <h4>Cara membaca tabel</h4>
+    <p>
+        <b>BSB</b> : Berkembang sangat baik <br>
+        <b>BSH</b> : Berkembang sesuai harapan <br>
+        <b>MB</b> : Mulai berkembang <br>
+        <b>BB</b> : Belum berkembang
     </p>
 
     <table>
@@ -47,6 +57,8 @@
                 @foreach ($data->projectTarget as $target)
                     <th>{{$target->target->code}}</th>
                 @endforeach
+                {{-- note --}}
+                <th>Catatan</th>
             </tr>
         </thead>
         <tbody>
@@ -60,15 +72,51 @@
                         <td>
                             @livewire('leger.score-project', [
                                     'student_id' => $student->student->id,
-                                    'project_target_id' => $target->target->id,
+                                    'project_target_id' => $target->id,
                                 ])
                         </td>
                     @endforeach
+                    {{-- note --}}
+                    <td>
+                        @livewire('leger.project-note', [
+                            'student_id' => $student->student->id,
+                            'project_id' => $data->id,
+                            ])
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
     <h3>Keterangan Capaian</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Kode Capaian</th>
+                <th>Deskripsi Capaian</th>
+                <th>Fase</th>
+                <th>Sub Elemen</th>
+                <th>Elemen</th>
+                <th>Dimensi</th>
+                <th>Sub Nilai</th>
+                <th>Nilai</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($data->projectTarget as $target)
+                <tr>
+                    <td>{{$target->target->code}}</td>
+                    <td>{{$target->target->description}}</td>
+                    <td>{{$target->target->phase}}</td>
+                    <td>{{$target->target->subElement->description}}</td>
+                    <td>{{$target->target->element->description}}</td>
+                    <td>{{$target->target->dimention->description}}</td>
+                    <td>{{$target->subValue->description}}</td>
+                    <td>{{$target->value->description}}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
 </body>
 </html>

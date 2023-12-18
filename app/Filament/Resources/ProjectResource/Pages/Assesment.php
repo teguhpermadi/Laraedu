@@ -79,10 +79,10 @@ class Assesment extends Page implements HasForms, HasTable
                 ->columns([
                     TextColumn::make('student.name'),
                     SelectColumn::make('score')->options([
-                        1 => 'Mulai Berkembang',
-                        2 => 'Sedang Berkembang',
-                        3 => 'Berkembang Sesuai Harapan',
                         4 => 'Sangat Berkembang',
+                        3 => 'Berkembang Sesuai Harapan',
+                        2 => 'Sedang Berkembang',
+                        1 => 'Mulai Berkembang',
                     ])
                 ])
                 ->bulkActions([
@@ -90,10 +90,10 @@ class Assesment extends Page implements HasForms, HasTable
                         ->form([
                             Select::make('score')
                             ->options([
-                                1 => 'Mulai Berkembang',
-                                2 => 'Sedang Berkembang',
-                                3 => 'Berkembang Sesuai Harapan',
                                 4 => 'Sangat Berkembang',
+                                3 => 'Berkembang Sesuai Harapan',
+                                2 => 'Sedang Berkembang',
+                                1 => 'Mulai Berkembang',
                             ])
                         ])
                         ->action(function (Collection $records, $data) {
