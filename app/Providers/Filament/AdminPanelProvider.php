@@ -65,7 +65,8 @@ class AdminPanelProvider extends PanelProvider
                 'Settings',
                 'Admin',
                 'Teacher',
-            ]);
+            ])
+            ->spa();
             // ->plugin(FilamentSpatieRolesPermissionsPlugin::make());
     }
 }
