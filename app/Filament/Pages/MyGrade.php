@@ -30,7 +30,8 @@ class MyGrade extends Page implements HasTable
 
     public function mount()
     {
-        $data = TeacherGrade::where('teacher_id', auth()->user()->userable->user_id)->first();
+        $teacher_id = auth()->user()->userable->userable_id;
+        $data = TeacherGrade::where('teacher_id', $teacher_id)->first();
         
         if($data->curriculum == 'merdeka'){
             $this->visible = true;

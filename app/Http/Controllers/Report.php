@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\CustomTemplateProcessor;
 use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Attitude;
@@ -20,6 +22,7 @@ use PhpOffice\PhpWord\TemplateProcessor;
 use PhpOffice\PhpWord\Element\Table;
 use PhpOffice\PhpWord\SimpleType\TblWidth;
 use Illuminate\Support\Str;
+use PhpOffice\PhpWord\Shared\Html;
 use Spatie\Valuestore\Valuestore;
 
 class Report extends Controller
@@ -37,6 +40,39 @@ class Report extends Controller
         $teacherGrade = TeacherGrade::with('teacher')->where('grade_id', $grade->grade_id)->first();
 
         $attendance = Attendance::where('student_id', $id)->first();
+
+        // status naik kelas
+        $status = '';
+        $nextGrade = (int) $grade->grade->grade;
+        switch ($attendance->status) {
+            case '1':
+                $nextGrade++;
+                switch ($nextGrade) {
+                    case '7':
+                        $status = 'Berdasarkan pencapaian seluruh kompetensi, peserta didik atas nama ' . Str::of($student->name)->title() . ' dinyatakan: LULUS dari satuan pendidikan.';
+                        break;
+                    
+                    case '10':
+                        $status = 'Berdasarkan pencapaian seluruh kompetensi, peserta didik atas nama ' . Str::of($student->name)->title() . ' dinyatakan: LULUS dari satuan pendidikan.';
+                        break;
+                    
+                    case '13':
+                        $status = 'Berdasarkan pencapaian seluruh kompetensi, peserta didik atas nama ' . Str::of($student->name)->title() . ' dinyatakan: LULUS dari satuan pendidikan.';
+                        break;
+                    
+                    default:
+                        $status = 'Berdasarkan pencapaian seluruh kompetensi, peserta didik atas nama ' . Str::of($student->name)->title() . ' dinyatakan: NAIK KELAS ' . $nextGrade;
+                        break;
+                }
+                break;
+            case '0':
+                $status = 'Berdasarkan pencapaian seluruh kompetensi, peserta didik atas nama ' . Str::of($student->name)->title() . ' dinyatakan: TINGGAL KELAS ' . $nextGrade;
+                break;
+            
+            default:
+                $status = '';
+                break;
+        }
         
         $attitude = Attitude::where('student_id', $id)->first();
 
@@ -232,6 +268,7 @@ class Report extends Controller
             'total_average_score_skill' => $totalAverageScoreSkill,
             'counting_total_skill' => $counting_total_skill,
             'extracurriculars' => $extra,
+            'status' => $status,
         ];
 
         // $data = $this->report($data);
@@ -278,6 +315,14 @@ class Report extends Controller
 
         // tabel ekstrakurikuler
         $templateProcessor->cloneRowAndSetValues('orderEx', $data['extracurriculars']);
+
+        // block status
+        if($data['academic']['semester'] == 'ganjil'){
+            $templateProcessor->cloneBlock('block_status', 0, true, false, null);
+        } else {
+            $templateProcessor->cloneBlock('block_status', 1, true, false, null);
+            $templateProcessor->setValue('status',$data['status']); 
+        }
         
         $filename = '\Rapor '.$data['student']['name'].' - '. $data['academic']['semester'] .'.docx';
         $file_path = storage_path('\app\public\downloads'.$filename);
@@ -404,6 +449,14 @@ class Report extends Controller
 
         // tabel ekstrakurikuler
         $templateProcessor->cloneRowAndSetValues('orderEx', $data['extracurriculars']);
+
+        // block status
+        if($data['academic']['semester'] == 'ganjil'){
+            $templateProcessor->cloneBlock('block_status', 0, true, false, null);
+        } else {
+            $templateProcessor->cloneBlock('block_status', 1, true, false, null);
+            $templateProcessor->setValue('status',$data['status']); 
+        }
         
         $filename = 'Rapor '.$data['student']['name'].' - '. $data['academic']['semester'] .'.docx';
         $file_path = storage_path('/app/public/downloads/'.$filename);

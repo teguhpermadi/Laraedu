@@ -16,10 +16,13 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class AttendanceResource extends Resource
@@ -59,6 +62,13 @@ class AttendanceResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('student.name')->searchable(),
+                // kolom naik kelas / tinggal kelas
+                SelectColumn::make('status')->options([
+                    1 => 'NAIK KELAS',
+                    0 => 'TINGGAL KELAS',
+                ])
+                // hidden jika semester ganjil
+                ->hidden(AcademicYear::active()->first()->semester == 'ganjil'),
                 TextInputColumn::make('sick')->rules(['numeric']),
                 TextInputColumn::make('permission')->rules(['numeric']),
                 TextInputColumn::make('absent')->rules(['numeric']),
@@ -74,14 +84,31 @@ class AttendanceResource extends Resource
                 //     Tables\Actions\EditAction::make(),
                 // ]),
             ])
-            // ->bulkActions([
-            //     Tables\Actions\BulkActionGroup::make([
-            //         Tables\Actions\DeleteBulkAction::make(),
-            //     ]),
-            // ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    // Tables\Actions\DeleteBulkAction::make(),
+                    BulkAction::make('Status')
+                        ->form([
+                            Select::make('status')->options([
+                                1 => 'NAIK KELAS',
+                                0 => 'TINGGAL KELAS',
+                            ]),
+                        ])
+                        ->action(function (Collection $records, $data) {
+                            $dataUpdate = [
+                                'status' => $data['status'],
+                            ]; 
+                            
+                            return $records->each->update($dataUpdate);
+                        })
+                        // hidden jika semester ganjil
+                        ->hidden(AcademicYear::active()->first()->semester == 'ganjil'),
+                ]),
+            ])
             ->modifyQueryUsing(function(Builder $query){
                 $query->myGrade();
             })
+            ->deferLoading()
             ->paginated(false);
     }
     
