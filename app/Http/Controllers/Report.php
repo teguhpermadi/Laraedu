@@ -100,7 +100,8 @@ class Report extends Controller
             // predikat
             $average_scores_predicate = '';
             $average_scores_skill_predicate = '';
-            $valueStore = Valuestore::make(storage_path('app/settings.json'));
+            $valueStore = Valuestore::make(storage_path('app/public/settings.json'));
+            // $valueStore = Valuestore::make(storage_path('app/settings.json'));
             $predicates = $valueStore->get('predicate');
 
             
@@ -596,7 +597,8 @@ class Report extends Controller
             // predikat
             $average_scores_predicate = '';
             $average_scores_skill_predicate = '';
-            $valueStore = Valuestore::make(storage_path('app/settings.json'));
+            // $valueStore = Valuestore::make(storage_path('app/settings.json'));
+            $valueStore = Valuestore::make(storage_path('app/public/settings.json'));
             $predicates = $valueStore->get('predicate');
 
 
