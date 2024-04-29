@@ -38,15 +38,6 @@ class MyGrade extends Page implements HasTable
         }
     }
 
-    // public static function shouldRegisterNavigation(): bool
-    // {
-    //     if(auth()->user()->hasRole('teacher grade')){
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
-
     public function table(Table $table): Table
     {
         return $table
@@ -75,6 +66,11 @@ class MyGrade extends Page implements HasTable
                     ->url(fn (Student $record): string => route('report.project', $record))
                     ->openUrlInNewTab()
                     ->visible($this->visible),
+                Action::make('Half Semester')
+                    ->button()
+                    ->color('warning')
+                    ->url(fn (Student $record): string => route('report.halfsemester', $record))
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 // ...

@@ -48,12 +48,14 @@ class AcademicYearResource extends Resource
                 ])->required(),
                 Select::make('active')->default(0)->boolean()->required(),
                 Select::make('teacher_id')
-                ->label('Head Master')
-                ->required()
-                ->options(Teacher::pluck('name', 'id')),
+                    ->label('Head Master')
+                    ->required()
+                    ->options(Teacher::pluck('name', 'id')),
+                DatePicker::make('date_report_half')
+                    ->label('date of report half semester'),
                 DatePicker::make('date_report')
-                ->required()
-                ->label('date of report')
+                    ->required()
+                    ->label('date of report'),
             ]);
     }
 
@@ -64,6 +66,7 @@ class AcademicYearResource extends Resource
                 TextColumn::make('year'),
                 TextColumn::make('semester'),
                 TextColumn::make('teacher.name'),
+                TextColumn::make('date_report_half'),
                 TextColumn::make('date_report'),
                 IconColumn::make('active')->boolean(),
             ])

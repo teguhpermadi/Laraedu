@@ -6,23 +6,31 @@ use App\Filament\Resources\CompetencyResource\Pages;
 use App\Filament\Resources\CompetencyResource\RelationManagers;
 use App\Models\Competency;
 use App\Models\TeacherSubject;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Columns\BooleanColumn;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use PDO;
 
@@ -80,12 +88,20 @@ class CompetencyResource extends Resource
                         TextInput::make('passing_grade')
                             ->numeric()
                             ->required(),
+                        
                 ])
                 ->columns(3),
                 
                 Hidden::make('teacher_subject_id')->required(),
                 TextInput::make('code')->required(),
                 Textarea::make('description')->required(),
+
+                // tengah semester
+                Radio::make('half_semester')
+                    ->label('Apakah kompetensi ini untuk tengah semester?')
+                    ->default(false)
+                    ->boolean()
+                    ->required(),
 
                 // visible jika kurikulum 2013
                 TextInput::make('code_skill')
@@ -132,21 +148,30 @@ class CompetencyResource extends Resource
     {
         return $table
         ->columns([
-            Split::make([
-                Stack::make([
-                    TextColumn::make('code')->weight(FontWeight::Bold),
-                    TextColumn::make('description')->wrap(),
-                ]),
-                Stack::make([
-                    TextColumn::make('code_skill')->weight(FontWeight::Bold),
-                    TextColumn::make('description_skill')->wrap(),
-                ]),
-                TextColumn::make('passing_grade'),
-            ]),
+            // Split::make([
+            //     Stack::make([
+            //         TextColumn::make('code')->weight(FontWeight::Bold),
+            //         TextColumn::make('description')->wrap(),
+            //     ]),
+            //     Stack::make([
+            //         TextColumn::make('code_skill')->weight(FontWeight::Bold),
+            //         TextColumn::make('description_skill')->wrap(),
+            //     ]),
+            //     TextColumn::make('passing_grade'),
+            //     IconColumn::make('half_semester')
+            //         ->boolean(),
+            // ]),
 
-                // visible jika kurikulum 2013
-                // TextColumn::make('code_skill'),
-                // TextColumn::make('description_skill'),
+            TextColumn::make('code')->weight(FontWeight::Bold),
+            TextColumn::make('description')->wrap(),
+            TextColumn::make('code_skill')->weight(FontWeight::Bold),
+            TextColumn::make('description_skill')->wrap(),
+            TextColumn::make('passing_grade'),
+            SelectColumn::make('half_semester')
+                ->options([
+                    '0' => 'Tidak',
+                    '1' => 'Ya',
+                ]),
             ])
             ->groups([
                 // 'teacherSubject.grade.name',
@@ -168,6 +193,22 @@ class CompetencyResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                     // Tables\Actions\ForceDeleteBulkAction::make(),
                     // Tables\Actions\RestoreBulkAction::make(),
+                    BulkAction::make('status')
+                        ->form([
+                            // tengah semester
+                            Radio::make('half_semester')
+                                ->label('Apakah kompetensi ini untuk tengah semester?')
+                                ->default(false)
+                                ->boolean()
+                                ->required(), 
+                        ])
+                        ->action(function (Collection $records, $data) {
+                            $dataUpdate = [
+                                'half_semester' => $data['half_semester'],
+                            ]; 
+                            
+                            return $records->each->update($dataUpdate);
+                        }),
                 ]),
             ])
             ->emptyStateActions([

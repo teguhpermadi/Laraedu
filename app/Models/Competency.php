@@ -17,6 +17,7 @@ class Competency extends Model
         'description',
         'description_skill',
         'passing_grade',
+        'half_semester',
     ];
 
     protected $hidden = [

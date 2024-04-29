@@ -18,6 +18,7 @@ class AcademicYear extends Model
         'active',
         'teacher_id',
         'date_report',
+        'date_report_half',
     ];
 
     protected $hidden = [
@@ -27,6 +28,11 @@ class AcademicYear extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    protected $casts = [
+        'date_report' => 'date:d-m-Y',
+        'date_report_half' => 'date:d-m-Y',
+    ];
 
     public function scopeActive(Builder $builder)
     {

@@ -224,7 +224,8 @@ class Report extends Controller
                 'passed_description_skill' => $lulusDescriptionsSkill,
                 'not_pass_description_skill' => $tidakLulusDescriptionsSkill,
                 'combined_description_skill' => $combinedResultDescriptionSkill,
-                // 'data_score' => $dataScores,
+                'data_score' => $dataScores,
+                'count_competencies' => $subject->studentCompetency->count(),
             ];
 
         }
@@ -564,5 +565,259 @@ class Report extends Controller
         $file_path = storage_path('/app/public/downloads/'.$filename);
         $templateProcessor->saveAs($file_path);
         return response()->download($file_path)->deleteFileAfterSend(true);; // <<< HERE
+    }
+
+    public function calculateHalfSemester($id)
+    {
+        $data = [];
+        $school = School::first();
+
+        $academic = AcademicYear::with('teacher')->active()->first();
+
+        $student = Student::find($id);
+        
+        $grade = StudentGrade::with('grade')->where('student_id', $id)->first();
+        $teacherGrade = TeacherGrade::with('teacher')->where('grade_id', $grade->grade_id)->first();
+
+        $attendance = Attendance::where('student_id', $id)->first();
+        
+        $scores = Student::with([
+            'studentGrade.teacherSubject.studentCompetency' => function($q) use ($id){
+                $q->where('student_id',$id)->halfSemester();
+            }])->find($id);
+
+        $subjects = $scores->studentGrade->teacherSubject;
+        $result = [];
+
+        foreach ($subjects as $subject) {
+            // buat dulu deskripsinya
+            $combinedResultDescription = 'Alhamdulillah ananda ' . Str::of($student->name)->title() . ' telah menguasai materi tentang ';
+
+            // predikat
+            $average_scores_predicate = '';
+            $average_scores_skill_predicate = '';
+            $valueStore = Valuestore::make(storage_path('app/settings.json'));
+            $predicates = $valueStore->get('predicate');
+
+
+            $exam = Exam::where('teacher_subject_id',$subject->id)->where('student_id', $id)->first();
+            $middle = $exam->score_middle;
+            // Pengecekan jika $middle atau $last null
+            $middleScore = $middle ? $middle : null;
+
+            $avg_score_student_competencies = $subject->studentCompetency->avg('score');
+            $avg_score_student_competencies_skill = $subject->studentCompetency->avg('score_skill');
+            $dataScores = $subject->studentCompetency;
+
+            /* 
+            HITUNG NILAI RATA-RATA KOMPETENSI, TENGAH SEMESTER DAN AKHIR SEMESTER
+            */
+
+            $scores = collect([$avg_score_student_competencies, $middleScore]);
+            $scores_skill = collect($avg_score_student_competencies_skill);
+            $average_scores = $scores->avg();
+            $average_scores_skill = $scores_skill->avg();
+
+            /**
+             * predikat
+             */
+            
+             foreach ($predicates as $predicate) {
+                // nilai pengetahuan
+                if ($average_scores <= $predicate['upper_limit'] && $average_scores > $predicate['lower_limit']) {
+                    $average_scores_predicate = $predicate['predicate'];
+                }
+                // nilai keterampilan
+                if ($average_scores_skill <= $predicate['upper_limit'] && $average_scores_skill > $predicate['lower_limit']) {
+                    $average_scores_skill_predicate = $predicate['predicate'];
+                }
+            }
+
+            $result[] = [
+            // $result[$subject->subject->order] = [
+                // 'teacher_subject_id' => $subject->id,
+                'order' => $subject->subject->order,
+                'orderDes' => $subject->subject->order,
+                'subject' => $subject->subject->name,
+                'subject_skill' => $subject->subject->name,
+                'code' => $subject->subject->code,
+                'score_competencies' => $avg_score_student_competencies,
+                'middle_score' => $middleScore,
+                'average_score' => round($average_scores,1),
+                'average_scores_predicate' => $average_scores_predicate,
+                // 'passed_description' => $lulusDescription,
+                // 'not_pass_description' => $tidakLulusDescription,
+                'combined_description' => $combinedResultDescription . $subject->subject->name,
+                // skill
+                'score_competencies_skill' => $avg_score_student_competencies_skill,
+                'average_score_skill' => round($average_scores_skill,1),
+                'average_scores_skill_predicate' => $average_scores_skill_predicate,
+                // 'not_pass_description_skill' => $tidakLulusDescriptionsSkill,
+                // 'combined_description_skill' => $combinedResultDescriptionSkill,
+                'data_score' => $dataScores,
+                'count_competencies' => $subject->studentCompetency->count(),
+            ];
+        }
+
+        $resultOrder = collect($result)->sortBy('order')->values()->all();
+        $resultCollection = collect($result);
+        $totalAverageScore = $resultCollection->sum('average_score');
+        $totalAverageScoreSkill = $resultCollection->sum('average_score_skill');
+        $counting_total = readNumber($totalAverageScore);
+        $counting_total_skill = readNumber($totalAverageScoreSkill);
+
+        App::setLocale('id');
+
+        $data = [
+            'school' => $school,
+            'academic' => $academic->toArray(),
+            'headmaster' => $academic->teacher->name,
+            'date_report' => Carbon::parse($academic->date_report)->isoFormat('D MMMM Y'),
+            'teacher' => $teacherGrade->teacher,
+            'student' => $student->toArray(),
+            'grade' => $grade->grade->toArray(),
+            'attendance' => $attendance,
+            'result' => $resultOrder,
+            'total_average_score' => $totalAverageScore,
+            'counting_total' => $counting_total,
+            'total_average_score_skill' => $totalAverageScoreSkill,
+            'counting_total_skill' => $counting_total_skill,
+        ];
+
+        // cari jumlah kompetensi terbanyak
+        $maxCompetency = collect($result)->max('count_competencies');
+
+        // $data = $this->report($data);
+        switch ($teacherGrade->curriculum) {
+            case '2013':
+                $data = $this->reportHalf2013($data);
+                break;
+            
+            default:
+            // return $data;
+                return view('report.halfSemester', ['data'=> $data, 'max' => ($maxCompetency) ? $maxCompetency : 1 ]);
+                // $data = $this->reportHalf($data);
+                break;
+        }
+
+        return $data;
+    }
+
+    public function reportHalf2013($data)
+    {
+        $templateProcessor = new TemplateProcessor( storage_path('/app/public/templates/reportHalf2013.docx'));
+        $templateProcessor->setValue('school_name',$data['school']['name']);
+        $templateProcessor->setValue('school_address',$data['school']['address']);
+        $templateProcessor->setValue('headmaster',$data['headmaster']);
+        $templateProcessor->setValue('date_report_half',$data['academic']['date_report_half']);
+        $templateProcessor->setValue('year',$data['academic']['year']);
+        $templateProcessor->setValue('semester',$data['academic']['semester']);
+        $templateProcessor->setValue('student_name',$data['student']['name']);
+        $templateProcessor->setValue('nisn',$data['student']['nisn']);
+        $templateProcessor->setValue('nis',$data['student']['nis']);
+        $templateProcessor->setValue('grade_name',$data['grade']['name']);
+        $templateProcessor->setValue('grade_level',$data['grade']['grade']);
+        $templateProcessor->setValue('sick',$data['attendance']['sick']);
+        $templateProcessor->setValue('permission',$data['attendance']['permission']);
+        $templateProcessor->setValue('absent',$data['attendance']['absent']);
+        $templateProcessor->setValue('total_attendance',$data['attendance']['total_attendance']);
+        $templateProcessor->setValue('teacher_name',$data['teacher']['name']);
+        $templateProcessor->setValue('total_average_score',$data['total_average_score']);
+        $templateProcessor->setValue('counting_total',$data['counting_total']);
+        $templateProcessor->setValue('total_average_score_skill',$data['total_average_score_skill']);
+        $templateProcessor->setValue('counting_total_skill',$data['counting_total_skill']);
+
+        // tabel nilai mata pelajaran
+        $templateProcessor->cloneRowAndSetValues('order', $data['result']);
+
+        $filename = 'Rapor Tengah Semester '.$data['student']['name'].' - '. str_replace('/', ' ', $data['academic']['year']) . ' '.$data['academic']['semester'] .'.docx';
+        $file_path = storage_path('/app/public/downloads/'.$filename);
+        $templateProcessor->saveAs($file_path);
+        return response()->download($file_path)->deleteFileAfterSend(true);; // <<< HERE
+    }
+
+    public function reportHalf($data)
+    {
+        $templateProcessor = new TemplateProcessor( storage_path('/app/public/templates/reportHalf.docx'));
+        $templateProcessor->setValue('school_name',$data['school']['name']);
+        $templateProcessor->setValue('school_address',$data['school']['address']);
+        $templateProcessor->setValue('headmaster',$data['headmaster']);
+        $templateProcessor->setValue('date_report_half',$data['academic']['date_report_half']);
+        $templateProcessor->setValue('year',$data['academic']['year']);
+        $templateProcessor->setValue('semester',$data['academic']['semester']);
+        $templateProcessor->setValue('student_name',$data['student']['name']);
+        $templateProcessor->setValue('nisn',$data['student']['nisn']);
+        $templateProcessor->setValue('nis',$data['student']['nis']);
+        $templateProcessor->setValue('grade_name',$data['grade']['name']);
+        $templateProcessor->setValue('grade_level',$data['grade']['grade']);
+        $templateProcessor->setValue('sick',$data['attendance']['sick']);
+        $templateProcessor->setValue('permission',$data['attendance']['permission']);
+        $templateProcessor->setValue('absent',$data['attendance']['absent']);
+        $templateProcessor->setValue('total_attendance',$data['attendance']['total_attendance']);
+        $templateProcessor->setValue('teacher_name',$data['teacher']['name']);
+
+        // count max competency
+        $result = $data['result'];
+        // Array untuk menyimpan count_competencies dari setiap entri
+        $countCompetenciesArray = [];
+        // Loop foreach untuk mengakses setiap entri
+        foreach ($result as $item) {
+            // Menyimpan nilai count_competencies dari setiap entri
+            $countCompetenciesArray[] = $item['count_competencies'];
+        }
+        // Menemukan jumlah count_competencies terbanyak
+        $maxCountCompetencies = max($countCompetenciesArray);
+        $numCol = 1;
+        $numRow = 1;
+
+        $table = new Table(array('borderSize' => 6, 'width' => 'auto', 'unit' => TblWidth::AUTO));
+        // table header
+        $table->addRow();
+        $table->addCell()->addText('No');
+        $table->addCell()->addText('Mata Pelajaran');
+        for ($i=0; $i < $maxCountCompetencies ; $i++) { 
+            $table->addCell()->addText($numCol);
+            $numCol++;
+        }
+        $table->addCell()->addText('STS');
+        $table->addCell()->addText('Rerata Nilai');
+
+        // table row
+        foreach ($data['result'] as $subject) {
+            $table->addRow();
+            $table->addCell()->addText($numRow);
+            $table->addCell()->addText($subject['subject']);
+            
+            // ubah data score
+            $dataScore = [];
+            foreach ($subject['data_score'] as $score) {
+                $dataScore[] = $score['score'];
+            }
+
+            // iterasi data score
+            for ($j=0; $j < $maxCountCompetencies ; $j++) { 
+                if(array_key_exists($j, $dataScore)){
+                    $table->addCell()->addText($dataScore[$j]);
+                } else {
+                    $table->addCell()->addText('-');
+                }
+            }
+
+
+            // nilai STS
+            $table->addCell()->addText($subject['middle_score']);
+            $table->addCell()->addText($subject['average_score']);
+
+            $numRow++;
+            
+        }
+        
+        $templateProcessor->setComplexBlock('table', $table);
+
+        $filename = 'Rapor Tengah Semester '.$data['student']['name'].' - '. str_replace('/', ' ', $data['academic']['year']) . ' '.$data['academic']['semester'] .'.docx';
+        $file_path = storage_path('/app/public/downloads/'.$filename);
+        $templateProcessor->saveAs($file_path);
+        return response()->download($file_path)->deleteFileAfterSend(true);; // <<< HERE
+
     }
 }

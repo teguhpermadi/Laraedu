@@ -107,6 +107,7 @@ Route::controller(Report::class)->group(function(){
     Route::get('cover-student/{id}', 'getData')->name('cover.student');
     Route::get('report/{id}', 'calculateReport')->name('report');
     Route::get('project/{id}', 'project')->name('report.project');
+    Route::get('half-semester/{id}', 'calculateHalfSemester')->name('report.halfsemester');
 });
 
 Route::controller(Leger::class)->group(function(){
