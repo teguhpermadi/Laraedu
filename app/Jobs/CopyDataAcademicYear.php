@@ -47,9 +47,9 @@ class CopyDataAcademicYear implements ShouldQueue
         $countStudentExtra = StudentExtracurricular::where('academic_year_id', $activeYear)->withoutGlobalScope(AcademicYearScope::class)->count();
         $countProjectCoor = ProjectCoordinator::where('academic_year_id', $activeYear)->withoutGlobalScope(AcademicYearScope::class)->count();
 
-        if($copyYear != $activeYear && AcademicYear::count()>1){
+        if($copyYear != $activeYear) {
             // copy student grade
-            if($countStudentGrade = 0) {
+            if($countStudentGrade == 0) {
                 StudentGrade::withoutGlobalScope(AcademicYearScope::class)->get()->each(function ($studentGrade) use ($activeYear){
                     // Duplicate the record
                     $newStudentGrade = $studentGrade->replicate();
@@ -63,7 +63,7 @@ class CopyDataAcademicYear implements ShouldQueue
             }
 
             // copy teacher subject
-            if($countTeacherSubject = 0) {
+            if($countTeacherSubject == 0) {
                 TeacherSubject::withoutGlobalScope(AcademicYearScope::class)->get()->each(function ($teacherSubject) use ($activeYear){
                     // Duplikasi catatan
                     $newTeacherSubject = $teacherSubject->replicate();
@@ -77,7 +77,7 @@ class CopyDataAcademicYear implements ShouldQueue
             }
 
             // copy teacher grade
-            if($countTeacherGrade = 0) {
+            if($countTeacherGrade == 0) {
                 TeacherGrade::withoutGlobalScope(AcademicYearScope::class)->get()->each(function ($teacherGrade) use ($activeYear){
                     // Duplikasi data
                     $newTeacherGrade = $teacherGrade->replicate();
@@ -91,7 +91,7 @@ class CopyDataAcademicYear implements ShouldQueue
             }
 
             // copy teacher extracurricular
-            if($countTeacherExtra = 0) {
+            if($countTeacherExtra == 0) {
                 TeacherExtracurricular::withoutGlobalScope(AcademicYearScope::class)->get()->each(function ($teacherExtracurricular) use ($activeYear) {
                     // Duplicate the record
                     $newTeacherExtracurricular = $teacherExtracurricular->replicate();
@@ -105,7 +105,7 @@ class CopyDataAcademicYear implements ShouldQueue
             }
 
             // copy student extracurricular
-            if($countStudentExtra = 0){
+            if($countStudentExtra == 0){
                 StudentExtracurricular::withoutGlobalScope(AcademicYearScope::class)->get()->each(function ($studentExtracurricular) use ($activeYear) {
                     // Duplicate the record
                     $newStudentExtracurricular = $studentExtracurricular->replicate();
@@ -119,7 +119,7 @@ class CopyDataAcademicYear implements ShouldQueue
             }
 
             // copy project coordinator
-            if($countProjectCoor = 0){
+            if($countProjectCoor == 0){
                 ProjectCoordinator::withoutGlobalScope(AcademicYearScope::class)->get()->each(function ($projectCoordinator) use ($activeYear) {
                     // Duplikasi rekaman
                     $newProjectCoordinator = $projectCoordinator->replicate();
