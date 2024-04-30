@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AcademicYearResource\Pages;
 use App\Filament\Resources\AcademicYearResource\RelationManagers;
+use App\Jobs\CopyDataAcademicYear;
 use App\Models\AcademicYear;
 use App\Models\Teacher;
 use Filament\Forms;
@@ -16,6 +17,7 @@ use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -68,7 +70,12 @@ class AcademicYearResource extends Resource
                 TextColumn::make('teacher.name'),
                 TextColumn::make('date_report_half'),
                 TextColumn::make('date_report'),
-                IconColumn::make('active')->boolean(),
+                // IconColumn::make('active')->boolean(),
+                SelectColumn::make('active')
+                ->options([
+                    '0' => 'Tidak',
+                    '1' => 'Ya'
+                ])
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -86,6 +93,15 @@ class AcademicYearResource extends Resource
                     Tables\Actions\ForceDeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
                 ]),
+                Action::make('Copy Data')
+                ->requiresConfirmation()
+                ->action(
+                    function(AcademicYear $record){
+                        // copy data from another academic year
+                        dispatch(new CopyDataAcademicYear($record->id));
+                    }
+                )
+                ->button(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

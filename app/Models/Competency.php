@@ -31,6 +31,13 @@ class Competency extends Model
         'code_skill' => 'string',
     ];
     
+    protected static function booted(): void
+    {
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder->whereHas('teacherSubject');
+        });
+    }
+
     public function teacherSubject()
     {
         return $this->belongsTo(TeacherSubject::class,'teacher_subject_id');

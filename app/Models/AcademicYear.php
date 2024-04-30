@@ -29,10 +29,10 @@ class AcademicYear extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $casts = [
-        'date_report' => 'date:d-m-Y',
-        'date_report_half' => 'date:d-m-Y',
-    ];
+    // protected $casts = [
+    //     'date_report' => 'date:d-m-Y',
+    //     'date_report_half' => 'date:d-m-Y',
+    // ];
 
     public function scopeActive(Builder $builder)
     {
