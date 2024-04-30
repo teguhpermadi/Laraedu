@@ -70,22 +70,12 @@ class AcademicYearResource extends Resource
                 TextColumn::make('teacher.name'),
                 TextColumn::make('date_report_half'),
                 TextColumn::make('date_report'),
-                // IconColumn::make('active')->boolean(),
-                SelectColumn::make('active')
-                ->options([
-                    '0' => 'Tidak',
-                    '1' => 'Ya'
-                ])
+                IconColumn::make('active')->boolean(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Action::make('Active')
-                    ->action(function(AcademicYear $record){
-                        AcademicYear::setActive($record->id);
-                    })->visible(auth()->user()->hasPermissionTo('activated_academic::year'))
-                    ->button(),
                 ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),
@@ -93,15 +83,21 @@ class AcademicYearResource extends Resource
                     Tables\Actions\ForceDeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
                 ]),
+                Action::make('Active')
+                    ->action(function(AcademicYear $record){
+                        AcademicYear::setActive($record->id);
+                    })
+                    // ->visible(auth()->user()->hasPermissionTo('activated_academic::year'))
+                    ->button(),
                 Action::make('Copy Data')
-                ->requiresConfirmation()
-                ->action(
-                    function(AcademicYear $record){
-                        // copy data from another academic year
-                        dispatch(new CopyDataAcademicYear($record->id));
-                    }
-                )
-                ->button(),
+                    ->requiresConfirmation()
+                    ->action(
+                        function(AcademicYear $record){
+                            // copy data from another academic year
+                            dispatch(new CopyDataAcademicYear($record->id));
+                        }
+                    )
+                    ->button(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
