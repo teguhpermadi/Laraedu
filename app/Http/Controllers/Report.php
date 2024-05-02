@@ -341,8 +341,9 @@ class Report extends Controller
             'academic' => $academic,
         ];
         
-        $data = $this->coverStudent($data);
-        return $data;
+        // $data = $this->coverStudent($data);
+        // return $data;
+        return view('report.cover', ['data' => $data]);
     }
 
     public function coverStudent($data)
