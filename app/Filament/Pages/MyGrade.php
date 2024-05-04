@@ -80,8 +80,9 @@ class MyGrade extends Page implements HasTable
                     ->button()
                     ->url(function(){
                         $myGrade = TeacherGrade::myGrade()->first();
-                        return route('leger.grade', $myGrade->grade_id);
-                    }),
+                        return route('leger.grade', $myGrade->id);
+                    })
+                    ->openUrlInNewTab(),
             ]);
     }
 
