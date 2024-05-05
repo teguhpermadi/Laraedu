@@ -676,6 +676,7 @@ class Report extends Controller
             'academic' => $academic->toArray(),
             'headmaster' => $academic->teacher->name,
             'date_report' => Carbon::parse($academic->date_report)->isoFormat('D MMMM Y'),
+            'date_report_half' => Carbon::parse($academic->date_report_half)->isoFormat('D MMMM Y'),
             'teacher' => $teacherGrade->teacher,
             'student' => $student->toArray(),
             'grade' => $grade->grade->toArray(),
@@ -712,7 +713,7 @@ class Report extends Controller
         $templateProcessor->setValue('school_name',$data['school']['name']);
         $templateProcessor->setValue('school_address',$data['school']['address']);
         $templateProcessor->setValue('headmaster',$data['headmaster']);
-        $templateProcessor->setValue('date_report_half',$data['academic']['date_report_half']);
+        $templateProcessor->setValue('date_report_half',$data['date_report_half']);
         $templateProcessor->setValue('year',$data['academic']['year']);
         $templateProcessor->setValue('semester',$data['academic']['semester']);
         $templateProcessor->setValue('student_name',$data['student']['name']);
