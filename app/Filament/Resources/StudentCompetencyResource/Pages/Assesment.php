@@ -6,6 +6,7 @@ use App\Filament\Resources\StudentCompetencyResource;
 use App\Models\Competency;
 use App\Models\StudentCompetency;
 use App\Models\TeacherSubject;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -137,6 +138,80 @@ class Assesment extends Page implements HasForms, HasTable
 
                     return $records->each->update($dataUpdate);
                 }),
+                BulkAction::make('Score Adjustment')
+                    ->color('warning')
+                    ->form([
+                        Fieldset::make('Score')
+                            ->schema([
+                                TextInput::make('score_min')
+                                    ->numeric()
+                                    ->default(0)
+                                    ->minValue(0)
+                                    ->maxValue(100)
+                                    ->required(),
+                                TextInput::make('score_max')
+                                    ->numeric()
+                                    ->default(0)
+                                    ->minValue(0)
+                                    ->maxValue(100)
+                                    ->required(),
+                            ]),
+                        Fieldset::make('Score Skill')
+                            ->schema([
+                                TextInput::make('score_skill_min')
+                                    ->numeric()
+                                    ->default(0)
+                                    ->minValue(0)
+                                    ->maxValue(100)
+                                    ->required(),
+                                TextInput::make('score_skill_max')
+                                    ->numeric()
+                                    ->default(0)
+                                    ->minValue(0)
+                                    ->maxValue(100)
+                                    ->required(),
+                            ])
+                            ->visible($this->visible),
+
+                    ])
+                    ->action(function (Collection $records, $data) {
+                        $scoreMin = (int) $data['score_min'];
+                        $scoreMax = (int) $data['score_max'];
+                        $scoreSkillMin = (int) $data['score_min'];
+                        $scoreSkillMax = (int) $data['score_max'];
+                        
+                        $original = collect();
+                        foreach ($records as $key) {
+                            $original->push([
+                                'id' => $key->id,
+                                'score' => $key->score,
+                                'score_skill' => $key->score_skill,
+                            ]);
+                        }
+
+                        $originalScoreMin = (int) $original->min('score');
+                        $originalScoreMax = (int) $original->max('score');
+                        $originalScoreSkillMin = (int) $original->min('score_skill');
+                        $originalScoreSkillMax = (int) $original->max('score_skill');
+
+                        // score adjusment
+                        $original->map(function($item) use ($scoreMin, $scoreMax, $scoreSkillMin, $scoreSkillMax, $originalScoreMin, $originalScoreMax, $originalScoreSkillMin, $originalScoreSkillMax){
+                            $newScore = $item['score'];
+                            $newScoreSkill = $item['score_skill'];
+
+                            if($this->visible){
+                                $newScore = $scoreMin + (($item['score'] - $originalScoreMin) / ($originalScoreMax - $originalScoreMin) * ($scoreMax - $scoreMin));
+                                $newScoreSkill = $scoreSkillMin + (($item['score_skill'] - $originalScoreSkillMin) / ($originalScoreSkillMax - $originalScoreSkillMin) * ($scoreSkillMax - $scoreSkillMin));
+                            } else {
+                                $newScore = $scoreMin + (($item['score'] - $originalScoreMin) / ($originalScoreMax - $originalScoreMin) * ($scoreMax - $scoreMin));
+                            }
+
+                            StudentCompetency::find($item['id'])->update([
+                                'score' => $newScore,
+                                'score_skill' => $newScoreSkill,
+                            ]);
+                        });
+                    })
             ])
             ->modifyQueryUsing(function (Builder $query){
                 $query->where('teacher_subject_id', $this->teacher_subject_id)

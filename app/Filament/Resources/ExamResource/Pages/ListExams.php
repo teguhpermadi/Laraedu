@@ -61,8 +61,6 @@ class ListExams extends ListRecords
                     // $data = [];
                     foreach ($exams as $rows) {
                         foreach ($rows as $value) {
-                            # code...
-                            // dd($value);
                             Exam::where([
                                 'teacher_subject_id' => $value['teacher_subject_id'],
                                 'student_id' => $value['student_id'],
