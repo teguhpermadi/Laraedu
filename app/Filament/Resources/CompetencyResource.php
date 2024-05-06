@@ -96,13 +96,6 @@ class CompetencyResource extends Resource
                 TextInput::make('code')->required(),
                 Textarea::make('description')->required(),
 
-                // tengah semester
-                Radio::make('half_semester')
-                    ->label('Apakah kompetensi ini untuk tengah semester?')
-                    ->default(false)
-                    ->boolean()
-                    ->required(),
-
                 // visible jika kurikulum 2013
                 TextInput::make('code_skill')
                     ->required()
@@ -140,6 +133,13 @@ class CompetencyResource extends Resource
                             return false;
                         }
                     }),
+
+                // tengah semester
+                Radio::make('half_semester')
+                    ->label('Apakah kompetensi ini untuk tengah semester?')
+                    ->default(false)
+                    ->boolean()
+                    ->required(),
 
             ]);
     }
