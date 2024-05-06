@@ -22,11 +22,6 @@ class ListCompetencies extends ListRecords
 {
     protected static string $resource = CompetencyResource::class;
 
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
-    }
-
     protected function getHeaderActions(): array
     {
         return [
