@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ExamResource\Pages;
 use App\Filament\Resources\ExamResource;
 use App\Models\Exam;
 use App\Models\TeacherSubject;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -95,27 +96,100 @@ class Evaluation extends Page implements HasForms, HasTable
             ])
             ->bulkActions([
                 BulkAction::make('Scoring')
-                ->form([
-                    TextInput::make('score_middle')
-                        ->numeric()
-                        ->minValue(0)
-                        ->maxValue(100)
-                        ->required(),
-                    TextInput::make('score_last')
-                        ->numeric()
-                        ->minValue(0)
-                        ->maxValue(100)
-                        ->required()
-                    
-                ])
-                ->action(function (Collection $records, $data) {
-                    $dataUpdate = [
-                        'score_middle' => $data['score_middle'],
-                        'score_last' => $data['score_last'],
-                    ]; 
-                    
-                    return $records->each->update($dataUpdate);
-                }),
+                    ->form([
+                        TextInput::make('score_middle')
+                            ->numeric()
+                            ->minValue(0)
+                            ->maxValue(100)
+                            ->required(),
+                        TextInput::make('score_last')
+                            ->numeric()
+                            ->minValue(0)
+                            ->maxValue(100)
+                            ->required()
+                        
+                    ])
+                    ->action(function (Collection $records, $data) {
+                        $dataUpdate = [
+                            'score_middle' => $data['score_middle'],
+                            'score_last' => $data['score_last'],
+                        ]; 
+                        
+                        return $records->each->update($dataUpdate);
+                    }),
+
+                    // score adjusment
+                    BulkAction::make('Score Adjustment')
+                        ->color('warning')
+                        ->form([
+                            Fieldset::make('Score')
+                                ->schema([
+                                    Select::make('score_type')
+                                        ->options([
+                                            1 => 'score middle',
+                                            2 => 'score last',
+                                        ])
+                                    ->required(),
+                                    TextInput::make('score_min')
+                                        ->numeric()
+                                        ->default(0)
+                                        ->minValue(0)
+                                        ->maxValue(100),
+                                    TextInput::make('score_max')
+                                        ->numeric()
+                                        ->default(0)
+                                        ->minValue(0)
+                                        ->maxValue(100),
+                                ])
+                                ->columns(3),
+                        ])
+                        ->action(function (Collection $records, $data) {
+                            $scoreMin = (int) $data['score_min'];
+                            $scoreMax = (int) $data['score_max'];
+                            
+                            $original = collect();
+                            foreach ($records as $key) {
+                                $original->push([
+                                    'id' => $key->id,
+                                    'score_middle' => $key->score_middle,
+                                    'score_last' => $key->score_last,
+                                ]);
+                            }
+
+                            $originalScoreMiddleMin = (int) $original->min('score_middle');
+                            $originalScoreMiddleMax = (int) $original->max('score_middle');
+                            $originalScoreLastMin = (int) $original->min('score_last');
+                            $originalScoreLastMax = (int) $original->max('score_last');
+
+                            // score adjusment
+                            $original->map(function($item) use ($scoreMin, $scoreMax, $originalScoreMiddleMin, $originalScoreMiddleMax, $originalScoreLastMin, $originalScoreLastMax, $data){
+                                // apa yang dinilai
+                                switch ($data['score_type']) {
+                                    case 1:
+                                        $newScore = $scoreMin + (($item['score_middle'] - $originalScoreMiddleMin) / ($originalScoreMiddleMax - $originalScoreMiddleMin) * ($scoreMax - $scoreMin));                                  
+                                        Exam::find($item['id'])
+                                            ->update([
+                                                'score_middle' => $newScore,
+                                            ]);
+                                        break;
+                                    
+                                    case 2:
+                                        $newScore = $scoreMin + (($item['score_last'] - $originalScoreLastMin) / ($originalScoreLastMax - $originalScoreLastMin) * ($scoreMax - $scoreMin));
+
+                                        Exam::find($item['id'])
+                                            ->update([
+                                                'score_last' => $newScore,
+                                            ]);
+                                        break;
+
+                                    default:
+                                        // $newScore = $item['score'];
+                                        break;
+                                }                           
+
+                                
+                            });
+                        })
             ])
             ->modifyQueryUsing(function (Builder $query){
                 $query->where('teacher_subject_id', $this->teacher_subject_id);

@@ -11,6 +11,7 @@ use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
@@ -143,42 +144,28 @@ class Assesment extends Page implements HasForms, HasTable
                     ->form([
                         Fieldset::make('Score')
                             ->schema([
+                                Select::make('score_type')
+                                ->options([
+                                    1 => 'score',
+                                    2 => 'score skill',
+                                ])
+                                ->required(),
                                 TextInput::make('score_min')
                                     ->numeric()
                                     ->default(0)
                                     ->minValue(0)
-                                    ->maxValue(100)
-                                    ->required(),
+                                    ->maxValue(100),
                                 TextInput::make('score_max')
                                     ->numeric()
                                     ->default(0)
                                     ->minValue(0)
-                                    ->maxValue(100)
-                                    ->required(),
-                            ]),
-                        Fieldset::make('Score Skill')
-                            ->schema([
-                                TextInput::make('score_skill_min')
-                                    ->numeric()
-                                    ->default(0)
-                                    ->minValue(0)
-                                    ->maxValue(100)
-                                    ->required(),
-                                TextInput::make('score_skill_max')
-                                    ->numeric()
-                                    ->default(0)
-                                    ->minValue(0)
-                                    ->maxValue(100)
-                                    ->required(),
+                                    ->maxValue(100),
                             ])
-                            ->visible($this->visible),
-
+                            ->columns(3),
                     ])
                     ->action(function (Collection $records, $data) {
                         $scoreMin = (int) $data['score_min'];
                         $scoreMax = (int) $data['score_max'];
-                        $scoreSkillMin = (int) $data['score_min'];
-                        $scoreSkillMax = (int) $data['score_max'];
                         
                         $original = collect();
                         foreach ($records as $key) {
@@ -195,21 +182,36 @@ class Assesment extends Page implements HasForms, HasTable
                         $originalScoreSkillMax = (int) $original->max('score_skill');
 
                         // score adjusment
-                        $original->map(function($item) use ($scoreMin, $scoreMax, $scoreSkillMin, $scoreSkillMax, $originalScoreMin, $originalScoreMax, $originalScoreSkillMin, $originalScoreSkillMax){
-                            $newScore = $item['score'];
-                            $newScoreSkill = $item['score_skill'];
+                        $original->map(function($item) use ($scoreMin, $scoreMax, $originalScoreMin, $originalScoreMax, $originalScoreSkillMin, $originalScoreSkillMax, $data){
+                            // apa yang dinilai
+                            switch ($data['score_type']) {
+                                case 1:
+                                    $newScore = $scoreMin + (($item['score'] - $originalScoreMin) / ($originalScoreMax - $originalScoreMin) * ($scoreMax - $scoreMin));                                  
+                                    StudentCompetency::find($item['id'])
+                                        ->update([
+                                            'score' => $newScore,
+                                        ]);
+                                    break;
+                                
+                                case 2:
+                                    if ($this->visible) {
+                                        $newScore = $scoreMin + (($item['score_skill'] - $originalScoreSkillMin) / ($originalScoreSkillMax - $originalScoreSkillMin) * ($scoreMax - $scoreMin));
+                                    } else {
+                                        $newScore = $item['score_skill'];
+                                    }
 
-                            if($this->visible){
-                                $newScore = $scoreMin + (($item['score'] - $originalScoreMin) / ($originalScoreMax - $originalScoreMin) * ($scoreMax - $scoreMin));
-                                $newScoreSkill = $scoreSkillMin + (($item['score_skill'] - $originalScoreSkillMin) / ($originalScoreSkillMax - $originalScoreSkillMin) * ($scoreSkillMax - $scoreSkillMin));
-                            } else {
-                                $newScore = $scoreMin + (($item['score'] - $originalScoreMin) / ($originalScoreMax - $originalScoreMin) * ($scoreMax - $scoreMin));
-                            }
+                                    StudentCompetency::find($item['id'])
+                                        ->update([
+                                            'score_skill' => $newScore,
+                                        ]);
+                                    break;
 
-                            StudentCompetency::find($item['id'])->update([
-                                'score' => $newScore,
-                                'score_skill' => $newScoreSkill,
-                            ]);
+                                default:
+                                    // $newScore = $item['score'];
+                                    break;
+                            }                           
+
+                            
                         });
                     })
             ])
