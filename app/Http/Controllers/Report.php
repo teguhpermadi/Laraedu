@@ -327,7 +327,7 @@ class Report extends Controller
         }
         
         $filename = 'Rapor '.$data['student']['name'].' - '. $data['academic']['semester'] .'.docx';
-        $file_path = storage_path('\app\public\downloads'.$filename);
+        $file_path = storage_path('/app/public/downloads/'.$filename);
         $templateProcessor->saveAs($file_path);
         return response()->download($file_path)->deleteFileAfterSend(true);; // <<< HERE
     }
@@ -388,7 +388,7 @@ class Report extends Controller
         $templateProcessor->setValue('headmaster',$data['academic']['teacher']['name']);
 
         $filename = 'Identitas '.$data['student']['name'].' - '. $data['academic']['semester'] .'.docx';
-        $file_path = storage_path('\app\public\downloads'.$filename);
+        $file_path = storage_path('/app/public/downloads/'.$filename);
         $templateProcessor->saveAs($file_path);
         return response()->download($file_path)->deleteFileAfterSend(true); // <<< HERE
     }
@@ -409,7 +409,7 @@ class Report extends Controller
         $templateProcessor->setValue('nis',$data['nis']);
 
         $filename = 'Cover '.$data['name'] .'.docx';
-        $file_path = storage_path('\app\public\downloads'.$filename);
+        $file_path = storage_path('/app/public/downloads/'.$filename);
         $templateProcessor->saveAs($file_path);
         return response()->download($file_path)->deleteFileAfterSend(true); // <<< HERE
     }
