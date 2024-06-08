@@ -26,8 +26,7 @@ class ProjectTargetObserver
             ];
         }
 
-
-        // ProjectStudent::insert($data);
+        ProjectStudent::insert($data);
     }
 
     /**
