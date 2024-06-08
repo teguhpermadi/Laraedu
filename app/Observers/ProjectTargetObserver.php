@@ -21,12 +21,13 @@ class ProjectTargetObserver
         foreach ($students as $student) {
             $data[] = [
                 'academic_year_id' => $academic,
-                'student_id' => $student->id,
+                'student_id' => $student->student_id,
                 'project_target_id' => $projectTarget->id,
             ];
         }
 
-        ProjectStudent::insert($data);
+
+        // ProjectStudent::insert($data);
     }
 
     /**
