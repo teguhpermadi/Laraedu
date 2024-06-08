@@ -528,7 +528,7 @@ class Report extends Controller
                 'title' => $project->name,
                 'description' => $project->description,
                 'num' => '${num_'.$project->id.'}',
-                'project_note' => $note->note,
+                'project_note' => ($note) ? $note->note : '-',
             ];
 
             $projectNum++;
