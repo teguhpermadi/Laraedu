@@ -326,7 +326,7 @@ class Report extends Controller
             $templateProcessor->setValue('status',$data['status']); 
         }
         
-        $filename = '\Rapor '.$data['student']['name'].' - '. $data['academic']['semester'] .'.docx';
+        $filename = 'Rapor '.$data['student']['name'].' - '. $data['academic']['semester'] .'.docx';
         $file_path = storage_path('\app\public\downloads'.$filename);
         $templateProcessor->saveAs($file_path);
         return response()->download($file_path)->deleteFileAfterSend(true);; // <<< HERE
@@ -387,7 +387,7 @@ class Report extends Controller
         $templateProcessor->setValue('date_received', Carbon::createFromFormat('Y-m-d', $data['student']['dataStudent']['date_received'])->locale('id')->translatedFormat('d F Y'));
         $templateProcessor->setValue('headmaster',$data['academic']['teacher']['name']);
 
-        $filename = '\Identitas '.$data['student']['name'].' - '. $data['academic']['semester'] .'.docx';
+        $filename = 'Identitas '.$data['student']['name'].' - '. $data['academic']['semester'] .'.docx';
         $file_path = storage_path('\app\public\downloads'.$filename);
         $templateProcessor->saveAs($file_path);
         return response()->download($file_path)->deleteFileAfterSend(true); // <<< HERE
@@ -408,7 +408,7 @@ class Report extends Controller
         $templateProcessor->setValue('nisn',$data['nisn']);
         $templateProcessor->setValue('nis',$data['nis']);
 
-        $filename = '\Cover '.$data['name'] .'.docx';
+        $filename = 'Cover '.$data['name'] .'.docx';
         $file_path = storage_path('\app\public\downloads'.$filename);
         $templateProcessor->saveAs($file_path);
         return response()->download($file_path)->deleteFileAfterSend(true); // <<< HERE
