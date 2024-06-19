@@ -37,7 +37,16 @@ class ProjectResource extends Resource
     {
         return $form
             ->schema([
-                Hidden::make('academic_year_id')->default(AcademicYear::active()->first()->id),
+                // Hidden::make('academic_year_id')->default(AcademicYear::active()->first()->id),
+                Select::make('academic_year_id')
+                ->options(
+                    AcademicYear::get()->map(function($item){
+                        return [
+                            'id' => $item->id,
+                            'code' => $item->year .'-'. $item->semester,
+                        ];  
+                    })->pluck('code', 'id') 
+                )->required(),
                 Hidden::make('teacher_id')->default(auth()->user()->userable->userable_id),
                 Select::make('grade_id')
                     ->options(function(){
