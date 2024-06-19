@@ -322,7 +322,7 @@ class Report extends Controller
         if($data['academic']['semester'] == 'ganjil'){
             $templateProcessor->cloneBlock('block_status', 0, true, false, null);
         } else {
-            $templateProcessor->cloneBlock('block_status', 1, true, false, null);
+            $templateProcessor->cloneBlock('block_status', 0, true, false, null);
             $templateProcessor->setValue('status',$data['status']); 
         }
         
