@@ -130,4 +130,9 @@ class ProjectResource extends Resource
             'note' => Note::route('/{record}/note'),
         ];
     }    
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->withoutGlobalScopes();
+    }
 }
