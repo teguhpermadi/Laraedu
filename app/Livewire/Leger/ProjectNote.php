@@ -12,7 +12,7 @@ class ProjectNote extends Component
     public function mount($project_id, $student_id)
     {
         $data = ModelsProjectNote::where('project_id', $project_id)->where('student_id', $student_id)->first();
-        $this->note = $data->note;
+        $this->note = ($data) ? $data->note : '-';
     }
 
     public function render()
