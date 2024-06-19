@@ -15,6 +15,7 @@ use Filament\Resources\Components\Tab;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class ListExams extends ListRecords
 {
@@ -81,7 +82,7 @@ class ListExams extends ListRecords
         $tabs = [];
         if($subjects->count() != 0){
             foreach ($subjects->get() as $subject) {
-                $tabs[$subject->id] = Tab::make($subject->subject->code.'-'.$subject->grade->name)
+                $tabs[$subject->id] = Tab::make(Str::upper($subject->subject->code.'-'.$subject->grade->name))
                     ->modifyQueryUsing(function(Builder $query) use ($subject){
                         $studentId = $subject->grade->studentGrade->pluck('student_id');
                         $query->whereIn('student_id', $studentId)
