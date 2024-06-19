@@ -79,6 +79,7 @@ class ProjectResource extends Resource
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('grade.name'),
+                TextColumn::make('academic.semester'),
             ])
             ->filters([
                 //
