@@ -74,8 +74,8 @@ class ExamResource extends Resource
             'index' => Pages\ListExams::route('/'),
             'create' => Pages\CreateExam::route('/create'),
             'evaluation' => Pages\Evaluation::route('evaluation'),
-            'view' => Pages\ViewExam::route('/{record}'),
-            'edit' => Pages\EditExam::route('/{record}/edit'),
+            // 'view' => Pages\ViewExam::route('/{record}'),
+            // 'edit' => Pages\EditExam::route('/{record}/edit'),
         ];
     }    
 }
