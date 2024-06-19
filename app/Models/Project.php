@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Scopes\AcademicYearScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Project extends Model
 {
@@ -47,5 +48,14 @@ class Project extends Model
     public function note()
     {
         return $this->hasMany(ProjectNote::class);
+    }
+
+    public function scopeMyProject(Builder $query, $teacher_id = null):void
+    {
+        if(is_null($teacher_id)){
+            $teacher_id = auth()->user()->userable->userable_id;
+        }
+
+        $query->where('teacher_id', $teacher_id);
     }
 }
