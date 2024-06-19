@@ -21,7 +21,7 @@ class ProjectObserver
         foreach ($students as $student) {
             $data[] = [
                 'academic_year_id' => $academic,
-                'student_id' => $student->id,
+                'student_id' => $student->student_id,
                 'project_id' => $project->id,
                 'note' => '-',
             ];
