@@ -167,4 +167,9 @@ class Student extends Model
     {
         return $this->hasOne(Attitude::class);
     }
+
+    public function studentUmmi()
+    {
+        return $this->hasMany(StudentUmmiGrade::class);
+    }
 }

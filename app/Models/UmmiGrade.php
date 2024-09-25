@@ -12,4 +12,9 @@ class UmmiGrade extends Model
         'name',
         'jilid',
     ];
+
+    public function studentUmmi()
+    {
+        return $this->hasMany(StudentUmmiGrade::class);
+    }
 }
