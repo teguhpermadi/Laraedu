@@ -1,8 +1,87 @@
-$grade = TeacherGrade::with('academic','grade.studentGrade.student', 'teacher')->find(6);
-$grade = TeacherGrade::with('academic','grade.studentGrade.student', 'teacher')->get();
-$grade = TeacherGrade::with('academic','teacher')->get();
-$grade = TeacherGrade::with('academic','grade.studentGrade.student', 'teacher')->find(12);
-$myGrade = TeacherGrade::myGrade()->first();
-$myGrade = TeacherGrade::myGrade()->first();
-$myGrade = TeacherGrade::myGrade()->first();
-$myGrade = TeacherGrade::myGrade()->first();
+Role::all()
+use Spatie\Permission\Models\Role;
+
+Role::all()
+use Spatie\Permission\Models\Role;
+User::all()
+use Spatie\Permission\Models\Role;
+User::find(14)
+use Spatie\Permission\Models\Role;
+User::find(14)->getRoleNames()
+use Spatie\Permission\Models\Role;
+User::find(13)->getRoleNames()
+use Spatie\Permission\Models\Role;
+User::find(14)->getRoleNames()
+use Spatie\Permission\Models\Role;
+User::find(13)->getRoleNames()
+User::find(1)
+User::find(1)->hasAllRoles(Role::all());
+use Spatie\Permission\Models\Role;
+
+User::find(1)->hasAllRoles(Role::all());
+use Spatie\Permission\Models\Role;
+
+User::find(1)->hasAllRoles(Role::all());
+use Spatie\Permission\Models\Role;
+
+User::find(1)->hasAllRoles(Role::all());
+use Spatie\Permission\Models\Role;
+
+User::find(1)->hasAllRoles(Role::all());
+use Spatie\Permission\Models\Role;
+
+User::find(1)->hasAllRoles(Role::all());
+use Spatie\Permission\Models\Role;
+
+User::find(1)->hasAllRoles('teacher ummi');
+use Spatie\Permission\Models\Role;
+
+User::find(1)->hasAllRoles('teacher ummi');
+use Spatie\Permission\Models\Role;
+
+User::find(1)->hasAllRoles('teacher ummi');
+use Spatie\Permission\Models\Role;
+
+User::find(1)->hasAllRoles('teacher');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher ummi');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher ummi');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher ummi');
+use Spatie\Permission\Models\Role;
+
+User::find(13)->hasAllRoles('teacher ummi');
