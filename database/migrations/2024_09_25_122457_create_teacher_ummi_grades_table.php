@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('teacher_ummi_grades', function (Blueprint $table) {
             $table->id();
             $table->foreignId('academic_year_id')->references('id')->on('academic_years')->cascadeOnDelete();
-            $table->foreignId('teacher_id')->references('id')->on('teachers')->cascadeOnDelete();
+            $table->foreignId('teacher_ummi_id')->references('id')->on('teachers')->cascadeOnDelete();
             $table->foreignId('ummi_grade_id')->references('id')->on('ummi_grades')->cascadeOnDelete();
             $table->timestamps();
         });

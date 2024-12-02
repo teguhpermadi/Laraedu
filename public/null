@@ -85,3 +85,12 @@ User::find(13)->hasAllRoles('teacher ummi');
 use Spatie\Permission\Models\Role;
 
 User::find(13)->hasAllRoles('teacher ummi');
+use Spatie\Permission\Models\Role;
+
+TeacherUmmi::with('teacher')->get()
+use Spatie\Permission\Models\Role;
+
+TeacherUmmi::with('teacher')->get()->pluck('teacher.name')
+use Spatie\Permission\Models\Role;
+
+TeacherUmmi::with('teacher')->get()->pluck('teacher.name', 'id')
