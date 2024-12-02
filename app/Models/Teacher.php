@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,8 +14,10 @@ class Teacher extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use HasUlids;
 
     protected $fillable = [
+        'ulid',
         'name',
         'gender',
         'active',
@@ -94,5 +97,20 @@ class Teacher extends Model
     {
         // Lakukan pengecekan apakah guru memiliki Userable
         return $this->userable !== null;
+    }
+
+    public function teacherExtracurricular()
+    {
+        return $this->hasMany(TeacherExtracurricular::class);
+    }
+
+    public function project()
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    public function projectCoordinator()
+    {
+        return $this->hasMany(ProjectCoordinator::class);
     }
 }

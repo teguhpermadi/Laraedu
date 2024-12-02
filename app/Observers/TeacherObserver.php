@@ -46,6 +46,13 @@ class TeacherObserver
     public function updated(Teacher $teacher): void
     {
         // Log::info('Teacher updated: ' . $teacher->name);
+        $teacher->dataTeacher()->update(['teacher_ulid' => $teacher->ulid]);
+        $teacher->teacherSubject()->update(['teacher_ulid' => $teacher->ulid]);
+        $teacher->teacherGrade()->update(['teacher_ulid' => $teacher->ulid]);
+        $teacher->teacherExtracurricular()->update(['teacher_ulid' => $teacher->ulid]);
+        $teacher->userable()->update(['userable_ulid' => $teacher->ulid]);
+        $teacher->project()->update(['teacher_ulid' => $teacher->ulid]);
+        $teacher->projectCoordinator()->update(['teacher_ulid' => $teacher->ulid]);
     }
 
     /**

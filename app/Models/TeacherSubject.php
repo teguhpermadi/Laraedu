@@ -19,6 +19,7 @@ class TeacherSubject extends Model
         'academic_year_id',
         'grade_id',
         'teacher_id',
+        'teacher_ulid',
         'subject_id',
     ];
 

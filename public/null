@@ -1,8 +1,83 @@
-$grade = TeacherGrade::with('academic','grade.studentGrade.student', 'teacher')->find(6);
-$grade = TeacherGrade::with('academic','grade.studentGrade.student', 'teacher')->get();
-$grade = TeacherGrade::with('academic','teacher')->get();
-$grade = TeacherGrade::with('academic','grade.studentGrade.student', 'teacher')->find(12);
-$myGrade = TeacherGrade::myGrade()->first();
-$myGrade = TeacherGrade::myGrade()->first();
-$myGrade = TeacherGrade::myGrade()->first();
-$myGrade = TeacherGrade::myGrade()->first();
+Str::ulid()->toBase32()
+Teacher::all()
+Teacher::all()->each(function ($teacher) {
+    $teacher->ulid = Str::ulid()->toBase32();
+    $teacher->save();
+});
+Teacher::all()->each(function ($teacher) {
+    $teacher->ulid = Str::ulid()->toBase32();
+    $teacher->save();
+});
+Teacher::all()->each(function ($teacher) {
+    $teacher->ulid = Str::ulid()->toBase32();
+    $teacher->save();
+});
+Teacher::all()->each(function ($teacher) {
+    $teacher->ulid = Str::ulid()->toBase32();
+    $teacher->save();
+  	$teacher->teacherSubject()->update(['teacher_ulid' => $teacher->ulid]);
+});
+Teacher::with('teacherSubject')->get()
+Teacher::all()->each(function ($teacher) {
+    $teacher->ulid = Str::ulid()->toBase32();
+    $teacher->save();
+});
+Teacher::with('teacherSubject')->get();
+
+TeacherSubject::get()
+Teacher::all()->each(function ($teacher) {
+    $teacher->ulid = Str::ulid()->toBase32();
+    $teacher->save();
+});
+Teacher::all()->each(function ($teacher) {
+    $teacher->ulid = Str::ulid()->toBase32();
+    $teacher->save();
+});
+
+
+
+
+
+Teacher::with('dataTeacher')->get()
+
+
+
+
+
+Teacher::with('dataTeacher', 'teacherSubject')->get()
+
+
+
+
+
+Teacher::with('dataTeacher', 'teacherSubject', 'teacherGrade')->get()
+
+
+
+
+
+Teacher::with('dataTeacher', 'teacherSubject', 'teacherGrade')->find(1)
+
+
+
+
+
+Teacher::with('dataTeacher', 'teacherSubject', 'teacherGrade', 'teacherExtracurricular')->find(1)
+
+
+
+
+
+Teacher::with('dataTeacher', 'teacherSubject', 'teacherGrade', 'teacherExtracurricular', 'userable')->find(1)
+
+
+
+
+
+Teacher::with('dataTeacher', 'teacherSubject', 'teacherGrade', 'teacherExtracurricular', 'userable', 'project')->find(1)
+
+
+
+
+
+Teacher::with('dataTeacher', 'teacherSubject', 'teacherGrade', 'teacherExtracurricular', 'userable', 'project', 'projectCoordinator')->find(1)
