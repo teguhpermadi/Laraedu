@@ -163,3 +163,9 @@ Teacher::all()->each(function ($query) {
 });
 
 
+AcademicYear::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+

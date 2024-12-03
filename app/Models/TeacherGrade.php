@@ -13,6 +13,7 @@ class TeacherGrade extends Model
 
     protected $fillable = [
         'academic_year_id',
+        'academic_year_ulid',
         'teacher_id',
         'teacher_ulid',
         'grade_id',

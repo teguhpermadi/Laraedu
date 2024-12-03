@@ -13,6 +13,7 @@ class ProjectStudent extends Model
 
     protected $fillable = [
         'academic_year_id',
+        'academic_year_ulid',
         'student_id',
         'student_ulid',
         'project_target_id',

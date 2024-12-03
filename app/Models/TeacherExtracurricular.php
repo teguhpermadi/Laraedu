@@ -13,7 +13,9 @@ class TeacherExtracurricular extends Model
 
     protected $fillable = [
         'academic_year_id',
+        'academic_year_ulid',
         'teacher_id',
+        'teacher_ulid',
         'extracurricular_id',
     ];
 

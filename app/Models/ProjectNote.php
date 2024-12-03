@@ -12,6 +12,7 @@ class ProjectNote extends Model
 
     protected $fillable = [
         'academic_year_id',
+        'academic_year_ulid',
         'project_id',
         'student_id',
         'student_ulid',
