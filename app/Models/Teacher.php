@@ -113,4 +113,9 @@ class Teacher extends Model
     {
         return $this->hasMany(ProjectCoordinator::class);
     }
+
+    public function academicYear()
+    {
+        return $this->hasMany(AcademicYear::class);
+    }
 }

@@ -53,6 +53,7 @@ class TeacherObserver
         $teacher->userable()->update(['userable_ulid' => $teacher->ulid]);
         $teacher->project()->update(['teacher_ulid' => $teacher->ulid]);
         $teacher->projectCoordinator()->update(['teacher_ulid' => $teacher->ulid]);
+        $teacher->academicYear()->update(['teacher_ulid' => $teacher->ulid]);
     }
 
     /**

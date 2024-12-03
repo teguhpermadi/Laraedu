@@ -17,6 +17,7 @@ class AcademicYear extends Model
         'semester',
         'active',
         'teacher_id',
+        'teacher_ulid',
         'date_report',
         'date_report_half',
     ];

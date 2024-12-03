@@ -145,3 +145,21 @@ Subject::all()->each(function ($query) {
 });
 
 Subject::with('teacherSubject')->get()
+Teacher::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
+Teacher::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
+Teacher::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
