@@ -9,6 +9,7 @@ use App\Listeners\PrintReportListener;
 use App\Models\Competency;
 use App\Models\Project;
 use App\Models\ProjectTarget;
+use App\Models\Student;
 use App\Models\StudentCompetency;
 use App\Models\StudentGrade;
 use App\Models\Teacher;
@@ -19,6 +20,7 @@ use App\Observers\CompetencyObserver;
 use App\Observers\ProjectObserver;
 use App\Observers\ProjectTargetObserver;
 use App\Observers\StudentGradeObserver;
+use App\Observers\StudentObserver;
 use App\Observers\TeacherExtracurricularObserver;
 use App\Observers\TeacherGradeObserver;
 use App\Observers\TeacherObserver;
@@ -54,6 +56,7 @@ class EventServiceProvider extends ServiceProvider
         TeacherExtracurricular::observe(TeacherExtracurricularObserver::class);
         ProjectTarget::observe(ProjectTargetObserver::class);
         Project::observe(ProjectObserver::class);
+        Student::observe(StudentObserver::class);
     }
 
     /**

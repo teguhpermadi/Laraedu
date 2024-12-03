@@ -15,6 +15,7 @@ class StudentExtracurricular extends Model
     protected $fillable = [
         'academic_year_id',
         'student_id',
+        'student_ulid',
         'extracurricular_id',
         'score',
     ];

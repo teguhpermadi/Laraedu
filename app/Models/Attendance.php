@@ -16,6 +16,7 @@ class Attendance extends Model
         'academic_year_id',
         'grade_id',
         'student_id',
+        'student_ulid',
         'sick',
         'permission',
         'absent',

@@ -14,11 +14,11 @@ class AcademicYearScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $academic_year_id = AcademicYear::active()->first();
-        if($academic_year_id){
-            return $builder->where('academic_year_id', $academic_year_id->id);
-        } else {
-            return $builder->where('academic_year_id', -1);
-        }
+        // $academic_year_id = AcademicYear::active()->first();
+        // if($academic_year_id){
+        //     return $builder->where('academic_year_id', $academic_year_id->id);
+        // } else {
+        //     return $builder->where('academic_year_id', -1);
+        // }
     }
 }

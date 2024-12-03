@@ -18,6 +18,7 @@ class StudentGrade extends Model
         'academic_year_id',
         'grade_id',
         'student_id',
+        'student_ulid',
     ];
 
     protected $hidden = [

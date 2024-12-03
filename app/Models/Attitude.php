@@ -15,6 +15,7 @@ class Attitude extends Model
         'academic_year_id',
         'grade_id',
         'student_id',
+        'student_ulid',
         'attitude_religius',
         'attitude_social',
     ];

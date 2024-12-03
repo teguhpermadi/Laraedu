@@ -11,6 +11,7 @@ class DataStudent extends Model
 
     protected $fillable = [
         'student_id',
+        'student_ulid',
         'student_address',
         'student_province',
         'student_city',

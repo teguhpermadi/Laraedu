@@ -15,6 +15,7 @@ class Student extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'ulid',
         'nisn',
         'nis',
         'name',
@@ -166,5 +167,15 @@ class Student extends Model
     public function attitude()
     {
         return $this->hasOne(Attitude::class);
+    }
+
+    public function project()
+    {
+        return $this->hasMany(ProjectStudent::class);
+    }
+
+    public function projectNote()
+    {
+        return $this->hasMany(ProjectNote::class);
     }
 }
