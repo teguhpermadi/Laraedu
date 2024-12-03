@@ -253,3 +253,15 @@ App\Models\ProjectTarget::all()->each(function ($query) {
 });
 
 
+StudentCompetency::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
+StudentCompetency::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
