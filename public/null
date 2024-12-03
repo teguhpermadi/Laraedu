@@ -265,3 +265,9 @@ StudentCompetency::all()->each(function ($query) {
 });
 
 
+StudentExtracurricular::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+

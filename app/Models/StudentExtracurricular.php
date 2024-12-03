@@ -13,6 +13,7 @@ class StudentExtracurricular extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ulid',
         'academic_year_id',
         'academic_year_ulid',
         'student_id',
