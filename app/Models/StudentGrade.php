@@ -15,6 +15,7 @@ class StudentGrade extends Model
     protected $table = 'student_grade';
 
     protected $fillable = [
+        'ulid',
         'academic_year_id',
         'academic_year_ulid',
         'grade_id',

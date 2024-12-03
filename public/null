@@ -271,3 +271,9 @@ StudentExtracurricular::all()->each(function ($query) {
 });
 
 
+StudentGrade::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
