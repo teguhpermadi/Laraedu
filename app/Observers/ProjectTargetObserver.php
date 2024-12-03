@@ -34,7 +34,7 @@ class ProjectTargetObserver
      */
     public function updated(ProjectTarget $projectTarget): void
     {
-        // 
+        $projectTarget->projectStudent()->update(['project_target_ulid' => $projectTarget->ulid]);
     }
 
     /**

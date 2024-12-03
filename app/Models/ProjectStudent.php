@@ -17,6 +17,7 @@ class ProjectStudent extends Model
         'student_id',
         'student_ulid',
         'project_target_id',
+        'project_target_ulid',
         'score'
     ];
 

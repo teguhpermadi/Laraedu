@@ -10,6 +10,7 @@ class ProjectTarget extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ulid',
         'project_id',
         'project_ulid',
         'phase',

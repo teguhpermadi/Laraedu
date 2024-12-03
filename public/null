@@ -247,3 +247,9 @@ App\Models\ProjectStudent::all()->each(function ($query) {
 });
 
 
+App\Models\ProjectTarget::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
