@@ -16,6 +16,7 @@ class TeacherSubject extends Model
     // protected $table = 'teacher_subject';
 
     protected $fillable = [
+        'ulid',
         'academic_year_id',
         'academic_year_ulid',
         'grade_id',

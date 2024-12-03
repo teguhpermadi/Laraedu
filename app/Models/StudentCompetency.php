@@ -16,6 +16,7 @@ class StudentCompetency extends Model
 
     protected $fillable = [
         'teacher_subject_id',
+        'teacher_subject_ulid',
         'student_id',
         'student_ulid',
         'competency_id',

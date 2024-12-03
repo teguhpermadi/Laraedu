@@ -181,3 +181,15 @@ Attitude::all()->each(function ($query) {
 });
 
 
+TeacherSubject::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
+TeacherSubject::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+

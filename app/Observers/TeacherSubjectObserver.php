@@ -31,7 +31,9 @@ class TeacherSubjectObserver
      */
     public function updated(TeacherSubject $teacherSubject): void
     {
-        //
+        $teacherSubject->exam()->update(['teacher_subject_ulid' => $teacherSubject->ulid]);
+        $teacherSubject->studentCompetency()->update(['teacher_subject_ulid' => $teacherSubject->ulid]);
+        $teacherSubject->competencies()->update(['teacher_subject_ulid' => $teacherSubject->ulid]);
     }
 
     /**

@@ -12,6 +12,7 @@ class Competency extends Model
 
     protected $fillable = [
         'teacher_subject_id',
+        'teacher_subject_ulid',
         'code',
         'code_skill',
         'description',
