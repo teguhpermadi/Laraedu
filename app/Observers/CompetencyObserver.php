@@ -33,7 +33,7 @@ class CompetencyObserver
      */
     public function updated(Competency $competency): void
     {
-        //
+        $competency->studentCompetency()->update(['competency_ulid' => $competency->ulid]);
     }
 
     /**

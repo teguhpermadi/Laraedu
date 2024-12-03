@@ -20,6 +20,7 @@ class StudentCompetency extends Model
         'student_id',
         'student_ulid',
         'competency_id',
+        'competency_ulid',
         'score',
         'score_skill',
     ];

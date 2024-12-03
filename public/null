@@ -193,3 +193,9 @@ TeacherSubject::all()->each(function ($query) {
 });
 
 
+Competency::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+

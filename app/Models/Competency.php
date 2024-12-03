@@ -11,6 +11,7 @@ class Competency extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ulid',
         'teacher_subject_id',
         'teacher_subject_ulid',
         'code',
