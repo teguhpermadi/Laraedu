@@ -361,3 +361,15 @@ TeacherGrade::all()->each(function ($query) {
 });
 
 
+User::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
+User::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+

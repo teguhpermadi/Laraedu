@@ -20,6 +20,7 @@ use App\Models\Teacher;
 use App\Models\TeacherExtracurricular;
 use App\Models\TeacherGrade;
 use App\Models\TeacherSubject;
+use App\Models\User;
 use App\Observers\AcademicYearObserver;
 use App\Observers\CompetencyObserver;
 use App\Observers\ExtracurricularObserver;
@@ -33,6 +34,7 @@ use App\Observers\TeacherExtracurricularObserver;
 use App\Observers\TeacherGradeObserver;
 use App\Observers\TeacherObserver;
 use App\Observers\TeacherSubjectObserver;
+use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -69,6 +71,7 @@ class EventServiceProvider extends ServiceProvider
         Subject::observe(SubjectObserver::class);
         AcademicYear::observe(AcademicYearObserver::class);
         Extracurricular::observe(ExtracurricularObserver::class);
+        User::observe(UserObserver::class);
     }
 
     /**
