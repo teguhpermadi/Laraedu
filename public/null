@@ -115,3 +115,33 @@ Grade::all()->each(function ($grade) {
     $grade->ulid = Str::ulid()->toBase32();
     $grade->save();
 });
+
+
+
+
+
+Grade::with('')->get()
+
+
+
+
+
+Grade::with('teacherSubject')->get()
+
+
+
+
+
+Subject::with('teacherSubject')->get()
+Subject::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
+Subject::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+Subject::with('teacherSubject')->get()

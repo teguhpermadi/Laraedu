@@ -13,6 +13,7 @@ class Subject extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'ulid',
         'name',
         'code',
         'order',
@@ -46,6 +47,11 @@ class Subject extends Model
         $grade_id = StudentGrade::where('student_id', $userable_id)->orderBy('grade_id')->pluck('grade_id')->unique();
         $subjects_id = TeacherSubject::where('grade_id', $grade_id)->orderBy('subject_id')->pluck('subject_id')->unique();
         $query->whereIn('id', $subjects_id);
+    }
+
+    public function teacherSubject()
+    {
+        return $this->hasMany(TeacherSubject::class);
     }
 
 }

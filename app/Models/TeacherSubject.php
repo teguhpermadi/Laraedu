@@ -22,6 +22,7 @@ class TeacherSubject extends Model
         'teacher_id',
         'teacher_ulid',
         'subject_id',
+        'subject_ulid',
     ];
 
     protected $hidden = [
