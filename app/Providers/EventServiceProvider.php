@@ -8,6 +8,7 @@ use App\Listeners\CalculateScoreListener;
 use App\Listeners\PrintReportListener;
 use App\Models\AcademicYear;
 use App\Models\Competency;
+use App\Models\Extracurricular;
 use App\Models\Grade;
 use App\Models\Project;
 use App\Models\ProjectTarget;
@@ -21,6 +22,7 @@ use App\Models\TeacherGrade;
 use App\Models\TeacherSubject;
 use App\Observers\AcademicYearObserver;
 use App\Observers\CompetencyObserver;
+use App\Observers\ExtracurricularObserver;
 use App\Observers\GradeObserver;
 use App\Observers\ProjectObserver;
 use App\Observers\ProjectTargetObserver;
@@ -66,6 +68,7 @@ class EventServiceProvider extends ServiceProvider
         Grade::observe(GradeObserver::class);
         Subject::observe(SubjectObserver::class);
         AcademicYear::observe(AcademicYearObserver::class);
+        Extracurricular::observe(ExtracurricularObserver::class);
     }
 
     /**

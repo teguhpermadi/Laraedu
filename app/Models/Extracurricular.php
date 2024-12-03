@@ -10,6 +10,7 @@ class Extracurricular extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ulid',
         'name',
     ];
 
@@ -17,4 +18,9 @@ class Extracurricular extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function studentExtracurricular()
+    {
+        return $this->hasMany(StudentExtracurricular::class);
+    }
 }

@@ -18,6 +18,7 @@ class StudentExtracurricular extends Model
         'student_id',
         'student_ulid',
         'extracurricular_id',
+        'extracurricular_ulid',
         'score',
     ];
 
