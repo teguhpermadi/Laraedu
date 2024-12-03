@@ -223,3 +223,27 @@ Project::all()->each(function ($query) {
 });
 
 
+ProjectCoordinator::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
+ProjectNote::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
+App\Models\ProjectNote::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
+App\Models\ProjectStudent::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
