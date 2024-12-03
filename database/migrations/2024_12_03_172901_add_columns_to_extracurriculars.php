@@ -18,6 +18,10 @@ return new class extends Migration
         Schema::table('student_extracurriculars', function (Blueprint $table) {
             $table->ulid('extracurricular_ulid')->after('extracurricular_id');
         });
+
+        Schema::table('teacher_extracurriculars', function (Blueprint $table) {
+            $table->ulid('extracurricular_ulid')->after('extracurricular_id');
+        });
     }
 
     /**
@@ -30,6 +34,10 @@ return new class extends Migration
         });
 
         Schema::table('student_extracurriculars', function (Blueprint $table) {
+            $table->dropColumn('extracurricular_ulid');
+        });
+
+        Schema::table('teacher_extracurriculars', function (Blueprint $table) {
             $table->dropColumn('extracurricular_ulid');
         });
     }

@@ -12,11 +12,13 @@ class TeacherExtracurricular extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ulid',
         'academic_year_id',
         'academic_year_ulid',
         'teacher_id',
         'teacher_ulid',
         'extracurricular_id',
+        'extracurricular_ulid',
     ];
 
     protected $hidden = [

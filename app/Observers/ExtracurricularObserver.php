@@ -20,6 +20,7 @@ class ExtracurricularObserver
     public function updated(Extracurricular $extracurricular): void
     {
         $extracurricular->studentExtracurricular()->update(['extracurricular_ulid' => $extracurricular->ulid]);
+        $extracurricular->teacherExtracurricular()->update(['extracurricular_ulid' => $extracurricular->ulid]);
     }
 
     /**
