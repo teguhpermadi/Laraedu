@@ -35,7 +35,8 @@ class ProjectObserver
      */
     public function updated(Project $project): void
     {
-        //
+        $project->projectTarget()->update(['project_ulid' => $project->ulid]);
+        $project->note()->update(['project_ulid' => $project->ulid]);
     }
 
     /**

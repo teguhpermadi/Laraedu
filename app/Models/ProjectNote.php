@@ -14,6 +14,7 @@ class ProjectNote extends Model
         'academic_year_id',
         'academic_year_ulid',
         'project_id',
+        'project_ulid',
         'student_id',
         'student_ulid',
         'note',

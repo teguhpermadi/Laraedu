@@ -11,6 +11,7 @@ class ProjectTarget extends Model
 
     protected $fillable = [
         'project_id',
+        'project_ulid',
         'phase',
         'dimention_id',
         'element_id',
