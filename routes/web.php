@@ -24,9 +24,26 @@ use App\Imports\TeacherGradeSheetImport;
 use App\Imports\TeacherImport;
 use App\Imports\TeacherSubjectImport;
 use App\Models\AcademicYear;
+use App\Models\Attendance;
+use App\Models\Attitude;
+use App\Models\Competency;
+use App\Models\DataStudent;
+use App\Models\Exam;
+use App\Models\Extracurricular;
+use App\Models\Grade;
+use App\Models\Project;
+use App\Models\ProjectCoordinator;
+use App\Models\ProjectNote;
+use App\Models\ProjectStudent;
+use App\Models\ProjectTarget;
 use App\Models\Student;
 use App\Models\StudentCompetency;
+use App\Models\StudentExtracurricular;
+use App\Models\StudentGrade;
+use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\TeacherExtracurricular;
+use App\Models\TeacherGrade;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 use Dompdf\Dompdf;
@@ -36,7 +53,7 @@ use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Spatie\Valuestore\Valuestore;
-
+use Illuminate\Support\Str;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -165,4 +182,132 @@ Route::controller(ExportExcel::class)->group(function(){
     Route::get('export/exam/{teacher_subject_id}', 'exam')->name('export.exam');
     Route::get('export/attendance/{grade_id}', 'attendance')->name('export.attendance');
     Route::get('export/competency/{teacher_subject_id}', 'competency')->name('export.competency');
+});
+
+Route::get('generate-ulid', function(){
+    // teacher
+    Teacher::all()->each(function($teacher){
+        $teacher->ulid = Str::ulid()->toBase32();
+        $teacher->save();
+    });
+
+    // student
+    Student::all()->each(function($student){
+        $student->ulid = Str::ulid()->toBase32();
+        $student->save();
+    });
+
+    // grade
+    Grade::all()->each(function($grade){
+        $grade->ulid = Str::ulid()->toBase32();
+        $grade->save();
+    });
+
+    // subject
+    Subject::all()->each(function($subject){
+        $subject->ulid = Str::ulid()->toBase32();
+        $subject->save();
+    });
+
+    // extracurricular
+    Extracurricular::all()->each(function($extracurricular){
+        $extracurricular->ulid = Str::ulid()->toBase32();
+        $extracurricular->save();
+    });
+
+    // academic year
+    AcademicYear::all()->each(function($academicYear){
+        $academicYear->ulid = Str::ulid()->toBase32();
+        $academicYear->save();
+    });
+
+    // student grade
+    StudentGrade::all()->each(function($studentGrade){
+        $studentGrade->ulid = Str::ulid()->toBase32();
+        $studentGrade->save();
+    });
+
+    // teacher grade
+    TeacherGrade::all()->each(function($teacherGrade){
+        $teacherGrade->ulid = Str::ulid()->toBase32();
+        $teacherGrade->save();
+    });
+
+    // data student
+    DataStudent::all()->each(function($dataStudent){
+        $dataStudent->ulid = Str::ulid()->toBase32();
+        $dataStudent->save();
+    });
+
+    // competency
+    Competency::all()->each(function($competency){
+        $competency->ulid = Str::ulid()->toBase32();
+        $competency->save();
+    });
+
+    // student competency
+    StudentCompetency::all()->each(function($studentCompetency){
+        $studentCompetency->ulid = Str::ulid()->toBase32();
+        $studentCompetency->save();
+    });
+
+    // exam
+    Exam::all()->each(function($exam){
+        $exam->ulid = Str::ulid()->toBase32();
+        $exam->save();
+    });
+
+    // attendance
+    Attendance::all()->each(function($attendance){
+        $attendance->ulid = Str::ulid()->toBase32();
+        $attendance->save();
+    });
+
+    // attitude
+    Attitude::all()->each(function($attitude){
+        $attitude->ulid = Str::ulid()->toBase32();
+        $attitude->save();
+    });
+
+    // student extracurricular
+    StudentExtracurricular::all()->each(function($studentExtracurricular){
+        $studentExtracurricular->ulid = Str::ulid()->toBase32();
+        $studentExtracurricular->save();
+    });
+
+    // teacher extracurricular
+    TeacherExtracurricular::all()->each(function($teacherExtracurricular){
+        $teacherExtracurricular->ulid = Str::ulid()->toBase32();
+        $teacherExtracurricular->save();
+    });
+
+    // project
+    Project::all()->each(function($project){
+        $project->ulid = Str::ulid()->toBase32();
+        $project->save();
+    });
+
+    // project coordinator
+    ProjectCoordinator::all()->each(function($projectCoordinator){
+        $projectCoordinator->ulid = Str::ulid()->toBase32();
+        $projectCoordinator->save();
+    });
+
+    // project target
+    ProjectTarget::all()->each(function($projectTarget){
+        $projectTarget->ulid = Str::ulid()->toBase32();
+        $projectTarget->save();
+    });
+
+    // project student
+    ProjectStudent::all()->each(function($projectStudent){
+        $projectStudent->ulid = Str::ulid()->toBase32();
+        $projectStudent->save();
+    });
+
+    // project note
+    ProjectNote::all()->each(function($projectNote){
+        $projectNote->ulid = Str::ulid()->toBase32();
+        $projectNote->save();
+    });
 });

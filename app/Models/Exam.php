@@ -12,6 +12,7 @@ class Exam extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'ulid',
         'teacher_subject_id',
         'teacher_subject_ulid',
         'student_id',
