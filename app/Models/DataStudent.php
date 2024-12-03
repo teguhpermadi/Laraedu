@@ -10,6 +10,7 @@ class DataStudent extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ulid',
         'student_id',
         'student_ulid',
         'student_address',

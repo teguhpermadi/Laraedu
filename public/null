@@ -199,3 +199,15 @@ Competency::all()->each(function ($query) {
 });
 
 
+DataStudent::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
+DataStudent::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
