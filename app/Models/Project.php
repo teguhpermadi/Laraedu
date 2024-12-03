@@ -14,7 +14,9 @@ class Project extends Model
     protected $fillable = [
         'academic_year_id',
         'grade_id',
+        'grade_ulid',
         'teacher_id',
+        'teacher_ulid',
         'name',
         'description',
         'phase',

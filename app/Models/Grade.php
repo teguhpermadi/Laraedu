@@ -13,6 +13,7 @@ class Grade extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'ulid',
         'name',
         'grade',
         'fase',
@@ -65,5 +66,25 @@ class Grade extends Model
         $userable_id = auth()->user()->userable->userable_id;
         $grade_id = StudentGrade::where('student_id', $userable_id)->orderBy('grade_id')->pluck('grade_id')->unique();
         $query->whereIn('id', $grade_id);
+    }
+
+    public function attitude()
+    {
+        return $this->hasMany(Attitude::class);
+    }
+
+    public function project()
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    public function projectCoordinator()
+    {
+        return $this->hasMany(ProjectCoordinator::class);
+    }
+
+    public function attendance()
+    {
+        return $this->hasMany(Attendance::class);
     }
 }

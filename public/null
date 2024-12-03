@@ -104,3 +104,14 @@ Student::all()->each(function ($student) {
     $student->ulid = Str::ulid()->toBase32();
     $student->save();
 });
+
+
+
+
+
+
+
+Grade::all()->each(function ($grade) {
+    $grade->ulid = Str::ulid()->toBase32();
+    $grade->save();
+});

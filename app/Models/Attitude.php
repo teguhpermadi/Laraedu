@@ -14,6 +14,7 @@ class Attitude extends Model
     protected $fillable = [
         'academic_year_id',
         'grade_id',
+        'grade_ulid',
         'student_id',
         'student_ulid',
         'attitude_religius',

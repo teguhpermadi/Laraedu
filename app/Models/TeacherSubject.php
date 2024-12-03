@@ -18,6 +18,7 @@ class TeacherSubject extends Model
     protected $fillable = [
         'academic_year_id',
         'grade_id',
+        'grade_ulid',
         'teacher_id',
         'teacher_ulid',
         'subject_id',

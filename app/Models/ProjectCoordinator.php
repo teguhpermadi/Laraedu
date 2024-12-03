@@ -13,7 +13,9 @@ class ProjectCoordinator extends Model
     protected $fillable = [
         'academic_year_id',
         'teacher_id',
+        'teacher_ulid',
         'grade_id',
+        'grade_ulid',
     ];
 
     protected static function booted(): void
