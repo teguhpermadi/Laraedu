@@ -57,7 +57,7 @@ return new class extends Migration
             $table->dropColumn('grade_ulid');
         });
 
-        Schema::table('student_grades', function (Blueprint $table) {
+        Schema::table('student_grade', function (Blueprint $table) {
             $table->dropColumn('grade_ulid');
         });
 
