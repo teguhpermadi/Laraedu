@@ -169,3 +169,15 @@ AcademicYear::all()->each(function ($query) {
 });
 
 
+Attendance::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
+Attitude::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
