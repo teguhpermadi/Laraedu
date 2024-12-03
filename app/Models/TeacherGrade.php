@@ -12,6 +12,7 @@ class TeacherGrade extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ulid',
         'academic_year_id',
         'academic_year_ulid',
         'teacher_id',

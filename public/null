@@ -355,3 +355,9 @@ TeacherExtracurricular::all()->each(function ($query) {
 });
 
 
+TeacherGrade::all()->each(function ($query) {
+    $query->ulid = Str::ulid()->toBase32();
+    $query->save();
+});
+
+
