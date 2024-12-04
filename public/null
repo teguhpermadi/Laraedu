@@ -1,3 +1,1 @@
-$userables = DB::connection('laraedu')->table('users')->get();
-User::get()
 User::with('userable')->get()

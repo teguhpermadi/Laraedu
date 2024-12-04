@@ -45,6 +45,7 @@ use App\Models\Teacher;
 use App\Models\TeacherExtracurricular;
 use App\Models\TeacherGrade;
 use App\Models\User;
+use App\Models\Userable;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 use Dompdf\Dompdf;
@@ -317,5 +318,10 @@ Route::get('user-ulid', function(){
     User::all()->each(function($user){
         $user->ulid = Str::ulid()->toBase32();
         $user->save();
+    });
+
+    Userable::all()->each(function($userable){
+        $userable->ulid = Str::ulid()->toBase32();
+        $userable->save();
     });
 });

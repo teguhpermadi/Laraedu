@@ -11,6 +11,7 @@ class Userable extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ulid',
         'user_id',
         'user_ulid',
         'userable_id',
