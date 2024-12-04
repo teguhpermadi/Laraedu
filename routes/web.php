@@ -44,6 +44,7 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\TeacherExtracurricular;
 use App\Models\TeacherGrade;
+use App\Models\TeacherSubject;
 use App\Models\User;
 use App\Models\Userable;
 use Illuminate\Support\Facades\Route;
@@ -223,6 +224,12 @@ Route::get('generate-ulid', function(){
         $academicYear->save();
     });
 
+    // teacher subject
+    TeacherSubject::all()->each(function($teacherSubject){
+        $teacherSubject->ulid = Str::ulid()->toBase32();
+        $teacherSubject->save();
+    });
+
     // student grade
     StudentGrade::all()->each(function($studentGrade){
         $studentGrade->ulid = Str::ulid()->toBase32();
@@ -312,9 +319,7 @@ Route::get('generate-ulid', function(){
         $projectNote->ulid = Str::ulid()->toBase32();
         $projectNote->save();
     });
-});
 
-Route::get('user-ulid', function(){
     User::all()->each(function($user){
         $user->ulid = Str::ulid()->toBase32();
         $user->save();
